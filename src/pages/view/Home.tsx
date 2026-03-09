@@ -11,6 +11,7 @@ import {
     ArrowRightIcon,
     TranslateIcon,
 } from '@phosphor-icons/react'
+import { useLang } from '../../context/LangProvider'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -331,21 +332,11 @@ function Section({ id, title, children }: { id: string; title: string; children:
 // ─── Home ─────────────────────────────────────────────────────────────────────
 
 export function Home() {
-    const [lang, setLang] = useState<Lang>(() => {
-        const stored = localStorage.getItem('portfolio-lang') as Lang | null
-        if (stored === 'pt' || stored === 'en') return stored
-        return navigator.language.startsWith('pt') ? 'pt' : 'en'
-    })
     const [github, setGithub] = useState<GitHubProfile | null>(null)
     const [imgError, setImgError] = useState(false)
+    const { lang, toggle: toggleLang } = useLang()
 
     const t = T[lang]
-
-    const toggleLang = () => {
-        const next: Lang = lang === 'pt' ? 'en' : 'pt'
-        setLang(next)
-        localStorage.setItem('portfolio-lang', next)
-    }
 
     useEffect(() => {
         fetch(`https://api.github.com/users/${GITHUB_USERNAME}`)
@@ -369,7 +360,7 @@ export function Home() {
                 <div style={{ maxWidth: '760px', margin: '0 auto', padding: '0 20px', position: 'relative', zIndex: 1 }}>
 
                     {/* ── Hero ── */}
-                    <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', paddingTop: '48px', paddingBottom: '72px' }}>
+                    <div id="hero" style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', paddingTop: '48px', paddingBottom: '72px' }}>
                         <HeroBlob />
 
                         {/* Avatar with shimmer ring */}
