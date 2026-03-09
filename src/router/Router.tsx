@@ -1,7 +1,13 @@
-import { Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { Home } from "../pages/view/Home";
-import { Header } from "../components/Header";
+import { DefaultLayout } from "../layouts/DefaultLayout";
 
 export function Router() {
-	return <Route path="/" element={<Header />} />;
+	return (
+		<Routes>
+			<Route element={<DefaultLayout />}>
+				<Route path="/" element={<Home />} />
+			</Route>
+		</Routes>
+	);
 }

@@ -12,7 +12,7 @@ type Theme = "light" | "dark";
 
 interface ThemeTokens {
 	bg: string; // fundo da página
-	surface: string; // cards, modals
+	surface: string; // cards, modalsfd
 	surfaceAlt: string; // fundos secundários
 	border: string; // bordas suaves (cards)
 	borderMd: string; // bordas médias (inputs e separadores)
@@ -60,14 +60,14 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 	const [theme, setTheme] = useState<Theme>(() => {
 		const stored = localStorage.getItem("theme") as Theme | null;
 		if (stored === "dark" || stored === "light") return stored;
-		return window.matchMedia("(prefers-color-scheme: dark").matches
+		return window.matchMedia("(prefers-color-scheme: dark)").matches
 			? "dark"
 			: "light";
 	});
 
 	useEffect(() => {
 		const root = document.documentElement;
-		root.classList.toggle("dakr", theme === "dark");
+		root.classList.toggle("dark", theme === "dark");
 		localStorage.setItem("theme", theme);
 	}, [theme]);
 

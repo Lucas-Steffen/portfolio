@@ -1,9 +1,584 @@
-import { Header } from "../../components/Header";
+import { useEffect, useState, useRef } from 'react'
+import {
+    EnvelopeIcon,
+    LinkedinLogoIcon,
+    GithubLogoIcon,
+    MapPinIcon,
+    BriefcaseIcon,
+    ArrowSquareOutIcon,
+    CalendarIcon,
+    TagIcon,
+    ArrowRightIcon,
+    TranslateIcon,
+} from '@phosphor-icons/react'
 
-export function Home(){
-    return(
-        <div>
-            <Header/>
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+interface GitHubProfile {
+    avatar_url: string
+    name: string
+    bio: string
+    public_repos: number
+    followers: number
+    following: number
+}
+
+type Lang = 'pt' | 'en'
+
+// ─── Translations ─────────────────────────────────────────────────────────────
+
+const T = {
+    pt: {
+        openToWork: 'Aberto a oportunidades',
+        roles: ['Desenvolvedor Web Full-Stack', 'Engenheiro de Software'],
+        location: 'Sinop, Mato Grosso – Brasil',
+        repos: 'Repositórios',
+        followers: 'Seguidores',
+        following: 'Seguindo',
+        about: 'Sobre',
+        aboutText: 'Desenvolvedor Web Full-Stack com experiência prática adquirida por meio de projetos próprios, desenvolvimento de APIs e soluções aplicadas ao uso real no dia a dia. Tenho sólida base em desenvolvimento front-end e back-end, com foco em organização, clareza de código, desempenho e escalabilidade. Atualmente curso Engenharia de Software.',
+        experience: 'Experiência',
+        projects: 'Projetos',
+        education: 'Educação',
+        skills: 'Habilidades',
+        blog: 'Blog',
+        present: 'Atual',
+        website: 'Site',
+        footer: '© {year} Lucas G. Amorim Steffen',
+        experience_items: [
+            { role: 'Desenvolvedor Jr', company: 'VF PAR', description: 'Atuação no desenvolvimento dos sistemas da empresa', current: true},
+            { role: 'Analista de Q.A', company: 'TopSapp', location: 'Sinop, MT – Brasil', period: 'Dezembro 2025 – Março 2026', description: 'Atuação em testes funcionais, regressão e validação de fluxos críticos em sistemas web, assegurando estabilidade antes e após deploy.', current: false },
+            { role: 'Analista de Implantação a Sistemas', company: 'Ecocentauro', location: 'Sinop, MT – Brasil', period: 'Janeiro 2024 – Dezembro 2025', description: 'Desenvolvimento de relatórios detalhados utilizando Crystal Reports e FastReports, com uso de SQL para extrair e formatar dados conforme requisitos específicos.', current: false },
+            { role: 'Assistente Administrativo', company: 'Autoescola Meridional', location: 'Sinop, MT – Brasil', period: 'Fevereiro 2023 – Janeiro 2024', description: 'Agendamento de aulas, envio de aulas, arquivamento e montagem de processos de CNH.', current: false },
+        ],
+        education_items: [
+            { institution: 'Estácio', period: '2025 – 2029', degree: 'Bacharelado em Engenharia de Software (Em andamento)', detail: 'Previsão de conclusão: 2029 · 2º Semestre' },
+        ],
+        projects_items: [
+            { title: 'Conversy', status: 'Ao vivo', type: 'Sistema de gestão de SDRs', date: '2026', description: 'Sistema desenvolvido com React, Typescript, Tailwind CSS e backend com Node.Js, Express.Js e PostgreSQL.', tags: ['React', 'Typescript', 'Tailwind CSS', 'Node.js', 'Express.js', 'PostgreSQL'], url: 'https://conversy.up.railway.app/', statusColor: '#22c55e' },
+            { title: 'Portfólio Pessoal', status: 'Ao vivo', type: 'Projeto pessoal', date: '2026', description: 'Portfólio desenvolvido com React, TypeScript e Tailwind CSS, com integração à API do GitHub e sistema de internacionalização PT/EN.', tags: ['React', 'TypeScript', 'Tailwind CSS', 'GitHub API'], url: '#', statusColor: '#22c55e' },
+        ],
+        blog_items: [] as { title: string; excerpt: string; date: string }[],
+    },
+    en: {
+        openToWork: 'Open to work',
+        roles: ['Full-Stack Web Developer', 'Software Engineer'],
+        location: 'Sinop, Mato Grosso – Brazil',
+        repos: 'Repos',
+        followers: 'Followers',
+        following: 'Following',
+        about: 'About',
+        aboutText: 'Full-Stack Web Developer with practical experience gained through personal projects, API development, and real-world solutions. I have a solid foundation in front-end and back-end development, focusing on code organization, clarity, performance, and scalability. Currently studying Software Engineering.',
+        experience: 'Experience',
+        projects: 'Projects',
+        education: 'Education',
+        skills: 'Skills',
+        blog: 'Blog',
+        present: 'Current',
+        website: 'Website',
+        footer: '© {year} Lucas G. Amorim Steffen',
+        experience_items: [
+            { role: 'Junior Developer', company: 'VF PAR', description: 'Involvement in the development of the company systems.', current: true},
+            { role: 'Q.A. Analyst', company: 'TopSapp', location: 'Sinop, MT – Brazil', period: 'December 2025 – March 2026', description: 'Performed functional testing, regression, and validation of critical workflows in web systems, ensuring stability before and after deployments.', current: false },
+            { role: 'Systems Implementation Analyst', company: 'Ecocentauro', location: 'Sinop, MT – Brazil', period: 'January 2024 – December 2025', description: 'Assisted in creating detailed reports using Crystal Reports and FastReports, leveraging SQL to extract and format data according to specific requirements.', current: false },
+            { role: 'Administrative Assistant', company: 'Autoescola Meridional', location: 'Sinop, MT – Brazil', period: 'February 2023 – January 2024', description: 'Managed class scheduling, lesson delivery, archiving CNH processes, and assembling CNH documentation.', current: false },
+        ],
+        education_items: [
+            { institution: 'Estácio', period: '2025 – 2029', degree: "Bachelor's in Software Engineering (Ongoing)", detail: 'Expected graduation: 2029 · 2st Semester' },
+        ],
+        projects_items: [
+            { title: 'Conversy', status: 'Live', type: 'SDR management system', date: '2026', description: 'System developed with React, Typescript, Tailwind CSS and backend with Node.Js, Express.Js and PostgreSQL.', tags: ['React', 'Typescript', 'Tailwind CSS', 'Node.js', 'Express.js', 'PostgreSQL'], url: 'https://conversy.up.railway.app/', statusColor: '#22c55e' },
+            { title: 'Personal Portfolio', status: 'Live', type: 'Personal project', date: '2026', description: 'Portfolio built with React, TypeScript and Tailwind CSS, featuring GitHub API integration and a PT/EN internationalization system.', tags: ['React', 'TypeScript', 'Tailwind CSS', 'GitHub API'], url: '#', statusColor: '#22c55e' },
+        ],
+        blog_items: [] as { title: string; excerpt: string; date: string }[],
+    },
+}
+
+const GITHUB_USERNAME = 'Lucas-Steffen'
+
+const SKILLS = [
+    'JavaScript', 'TypeScript', 'React', 'Vue.js', 'Tailwind CSS',
+    'Node.js', 'PHP', 'Java', 'PostgreSQL', 'MySQL', 'Firebird',
+    'Docker', 'Git', 'Agile/Kanban', 'Scrum',
+]
+
+const SOCIAL = (lang: Lang) => [
+    { label: lang === 'pt' ? 'E-mail' : 'Email', icon: EnvelopeIcon, href: 'mailto:lucasgabriel.programador@gmail.com' },
+    { label: 'LinkedIn', icon: LinkedinLogoIcon, href: 'https://linkedin.com/in/lucasteffen' },
+    { label: 'GitHub', icon: GithubLogoIcon, href: `https://github.com/${GITHUB_USERNAME}` },
+]
+
+// ─── Global CSS ───────────────────────────────────────────────────────────────
+
+const GLOBAL_CSS = `
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@keyframes blobMove {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33%       { transform: translate(30px, -20px) scale(1.05); }
+    66%       { transform: translate(-20px, 15px) scale(0.97); }
+}
+@keyframes shimmerRing {
+    0%   { box-shadow: 0 0 0 0 rgba(99,102,241,0), 0 0 20px 4px rgba(99,102,241,0.15); }
+    50%  { box-shadow: 0 0 0 6px rgba(99,102,241,0.08), 0 0 32px 8px rgba(99,102,241,0.25); }
+    100% { box-shadow: 0 0 0 0 rgba(99,102,241,0), 0 0 20px 4px rgba(99,102,241,0.15); }
+}
+@keyframes cursor {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+}
+@keyframes skillPop {
+    from { opacity: 0; transform: scale(0.8); }
+    to   { opacity: 1; transform: scale(1); }
+}
+.reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+}
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+.card-hover {
+    transition: border-color 0.25s, box-shadow 0.25s, transform 0.2s;
+}
+.card-hover:hover {
+    border-color: rgba(99,102,241,0.35) !important;
+    box-shadow: 0 0 24px rgba(99,102,241,0.08);
+    transform: translateY(-2px);
+}
+.social-link {
+    transition: color 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.2s !important;
+}
+.social-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(99,102,241,0.15) !important;
+}
+`
+
+// ─── Stars background ─────────────────────────────────────────────────────────
+
+function StarField() {
+    const canvasRef = useRef<HTMLCanvasElement>(null)
+    useEffect(() => {
+        const canvas = canvasRef.current
+        if (!canvas) return
+        const ctx = canvas.getContext('2d')!
+        let animId: number
+        const resize = () => { canvas.width = window.innerWidth; canvas.height = document.body.scrollHeight }
+        const stars = Array.from({ length: 180 }, () => ({
+            x: Math.random(), y: Math.random(),
+            r: Math.random() * 1.2 + 0.3,
+            alpha: Math.random() * 0.6 + 0.2,
+            speed: Math.random() * 0.003 + 0.001,
+            phase: Math.random() * Math.PI * 2,
+        }))
+        let t = 0
+        const draw = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
+            stars.forEach(s => {
+                const a = s.alpha * (0.5 + 0.5 * Math.sin(t * s.speed * 100 + s.phase))
+                ctx.beginPath()
+                ctx.arc(s.x * canvas.width, s.y * canvas.height, s.r, 0, Math.PI * 2)
+                ctx.fillStyle = `rgba(147,210,255,${a})`
+                ctx.fill()
+            })
+            t += 0.016
+            animId = requestAnimationFrame(draw)
+        }
+        resize(); draw()
+        window.addEventListener('resize', resize)
+        return () => { cancelAnimationFrame(animId); window.removeEventListener('resize', resize) }
+    }, [])
+    return <canvas ref={canvasRef} style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }} />
+}
+
+// ─── Typing effect ────────────────────────────────────────────────────────────
+
+function TypedRole({ roles }: { roles: string[] }) {
+    const [display, setDisplay] = useState('')
+    const [roleIdx, setRoleIdx] = useState(0)
+    const [phase, setPhase] = useState<'typing' | 'pause' | 'erasing'>('typing')
+
+    useEffect(() => {
+        const target = roles[roleIdx]
+        let timeout: ReturnType<typeof setTimeout>
+
+        if (phase === 'typing') {
+            if (display.length < target.length) {
+                timeout = setTimeout(() => setDisplay(target.slice(0, display.length + 1)), 60)
+            } else {
+                timeout = setTimeout(() => setPhase('pause'), 1800)
+            }
+        } else if (phase === 'pause') {
+            timeout = setTimeout(() => setPhase('erasing'), 400)
+        } else {
+            if (display.length > 0) {
+                timeout = setTimeout(() => setDisplay(d => d.slice(0, -1)), 35)
+            } else {
+                setRoleIdx(i => (i + 1) % roles.length)
+                setPhase('typing')
+            }
+        }
+        return () => clearTimeout(timeout)
+    }, [display, phase, roleIdx, roles])
+
+    return (
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '99px', padding: '6px 16px', marginBottom: '10px', minWidth: '260px', justifyContent: 'center' }}>
+            <BriefcaseIcon size={14} style={{ color: '#94a3b8', flexShrink: 0 }} />
+            <span style={{ color: '#cbd5e1', fontSize: '14px', fontWeight: 500 }}>
+                {display}
+                <span style={{ animation: 'cursor 1s step-end infinite', color: '#6366f1', marginLeft: '1px' }}>|</span>
+            </span>
         </div>
+    )
+}
+
+// ─── Scroll Reveal ────────────────────────────────────────────────────────────
+
+function RevealSection({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+    const ref = useRef<HTMLDivElement>(null)
+    useEffect(() => {
+        const el = ref.current
+        if (!el) return
+        const obs = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) {
+                el.style.transitionDelay = `${delay}ms`
+                el.classList.add('visible')
+                obs.disconnect()
+            }
+        }, { threshold: 0.12 })
+        obs.observe(el)
+        return () => obs.disconnect()
+    }, [delay])
+    return <div ref={ref} className="reveal">{children}</div>
+}
+
+// ─── Glow Hero Blob ───────────────────────────────────────────────────────────
+
+function HeroBlob() {
+    return (
+        <div style={{
+            position: 'absolute',
+            top: '-60px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '520px',
+            height: '520px',
+            borderRadius: '50%',
+            background: 'radial-gradient(ellipse at center, rgba(99,102,241,0.12) 0%, rgba(139,92,246,0.06) 40%, transparent 70%)',
+            pointerEvents: 'none',
+            animation: 'blobMove 10s ease-in-out infinite',
+            zIndex: 0,
+        }} />
+    )
+}
+
+// ─── Lang Toggle ──────────────────────────────────────────────────────────────
+
+function LangToggle({ lang, onToggle }: { lang: Lang; onToggle: () => void }) {
+    const [hovered, setHovered] = useState(false)
+    return (
+        <button
+            onClick={onToggle}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+            title={lang === 'pt' ? 'Switch to English' : 'Mudar para Português'}
+            style={{
+                position: 'fixed', bottom: '24px', right: '24px', zIndex: 100,
+                display: 'flex', alignItems: 'center', gap: '7px',
+                padding: '8px 14px', borderRadius: '99px',
+                border: '1px solid rgba(255,255,255,0.12)',
+                background: hovered ? 'rgba(99,102,241,0.25)' : 'rgba(15,23,42,0.85)',
+                backdropFilter: 'blur(12px)',
+                color: hovered ? '#fff' : '#94a3b8',
+                fontSize: '13px', fontWeight: 600, cursor: 'pointer',
+                transition: 'all 0.2s', letterSpacing: '0.04em',
+                boxShadow: hovered ? '0 0 20px rgba(99,102,241,0.3)' : 'none',
+            }}
+        >
+            <TranslateIcon size={16} />
+            {lang === 'pt' ? 'EN' : 'PT'}
+        </button>
+    )
+}
+
+// ─── Section ──────────────────────────────────────────────────────────────────
+
+function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
+    return (
+        <section id={id} style={{ marginBottom: '80px' }}>
+            <RevealSection>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '32px' }}>
+                    <h2 style={{ color: '#f1f5f9', fontSize: '22px', fontWeight: 700, fontFamily: "'Sora', sans-serif", whiteSpace: 'nowrap' }}>
+                        {title}
+                    </h2>
+                    <div style={{ flex: 1, height: '1px', background: 'linear-gradient(to right, rgba(99,102,241,0.4), rgba(255,255,255,0.05))' }} />
+                </div>
+            </RevealSection>
+            {children}
+        </section>
+    )
+}
+
+// ─── Home ─────────────────────────────────────────────────────────────────────
+
+export function Home() {
+    const [lang, setLang] = useState<Lang>(() => {
+        const stored = localStorage.getItem('portfolio-lang') as Lang | null
+        if (stored === 'pt' || stored === 'en') return stored
+        return navigator.language.startsWith('pt') ? 'pt' : 'en'
+    })
+    const [github, setGithub] = useState<GitHubProfile | null>(null)
+    const [imgError, setImgError] = useState(false)
+
+    const t = T[lang]
+
+    const toggleLang = () => {
+        const next: Lang = lang === 'pt' ? 'en' : 'pt'
+        setLang(next)
+        localStorage.setItem('portfolio-lang', next)
+    }
+
+    useEffect(() => {
+        fetch(`https://api.github.com/users/${GITHUB_USERNAME}`)
+            .then(r => r.json()).then(d => setGithub(d)).catch(() => null)
+    }, [])
+
+    const avatarUrl = !imgError && github?.avatar_url
+        ? github.avatar_url
+        : `https://ui-avatars.com/api/?name=Lucas+Steffen&background=1e293b&color=94a3b8&size=200`
+
+    return (
+        <>
+            <style>{GLOBAL_CSS}</style>
+            <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+            <LangToggle lang={lang} onToggle={toggleLang} />
+
+            <div style={{ position: 'relative', zIndex: 1, fontFamily: "'DM Sans', sans-serif" }}>
+                <StarField />
+
+                <div style={{ maxWidth: '760px', margin: '0 auto', padding: '0 20px', position: 'relative', zIndex: 1 }}>
+
+                    {/* ── Hero ── */}
+                    <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', paddingTop: '48px', paddingBottom: '72px' }}>
+                        <HeroBlob />
+
+                        {/* Avatar with shimmer ring */}
+                        <div style={{ position: 'relative', marginBottom: '24px', zIndex: 1, animation: 'fadeIn 0.8s ease' }}>
+                            <div style={{
+                                width: '112px', height: '112px', borderRadius: '50%', padding: '3px',
+                                background: 'linear-gradient(135deg, rgba(99,102,241,0.7), rgba(139,92,246,0.4))',
+                                animation: 'shimmerRing 3s ease-in-out infinite',
+                            }}>
+                                <img
+                                    src={avatarUrl}
+                                    onError={() => setImgError(true)}
+                                    alt="Avatar"
+                                    style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover', display: 'block' }}
+                                />
+                            </div>
+                            <div style={{ position: 'absolute', bottom: '-4px', left: '50%', transform: 'translateX(-50%)', background: 'rgba(15,23,42,0.9)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '99px', padding: '3px 10px', display: 'flex', alignItems: 'center', gap: '5px', whiteSpace: 'nowrap' }}>
+                                <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#22c55e', display: 'block', flexShrink: 0, boxShadow: '0 0 6px #22c55e' }} />
+                                <span style={{ color: '#cbd5e1', fontSize: '11px', fontWeight: 500 }}>{t.openToWork}</span>
+                            </div>
+                        </div>
+
+                        {/* GitHub stats */}
+                        {github && (
+                            <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', flexWrap: 'wrap', justifyContent: 'center', animation: 'fadeUp 0.6s ease 0.1s both' }}>
+                                {([
+                                    { label: t.repos, value: github.public_repos },
+                                    { label: t.followers, value: github.followers },
+                                    { label: t.following, value: github.following },
+                                ] as { label: string; value: number }[]).map(({ label, value }) => (
+                                    <div key={label} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '99px', padding: '3px 12px', display: 'flex', gap: '5px', alignItems: 'center' }}>
+                                        <span style={{ color: '#fff', fontSize: '13px', fontWeight: 600 }}>{value}</span>
+                                        <span style={{ color: '#64748b', fontSize: '12px' }}>{label}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Name */}
+                        <h1 style={{ color: '#f1f5f9', fontSize: 'clamp(32px, 6vw, 52px)', fontWeight: 700, fontFamily: "'Sora', sans-serif", lineHeight: 1.1, marginBottom: '16px', letterSpacing: '-0.02em', animation: 'fadeUp 0.7s ease 0.2s both', zIndex: 1 }}>
+                            Lucas G. Amorim Steffen
+                        </h1>
+
+                        {/* Typed role */}
+                        <div style={{ animation: 'fadeUp 0.7s ease 0.35s both', zIndex: 1 }}>
+                            <TypedRole roles={t.roles} />
+                        </div>
+
+                        {/* Location */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '28px', animation: 'fadeUp 0.7s ease 0.45s both' }}>
+                            <MapPinIcon size={14} style={{ color: '#64748b' }} />
+                            <span style={{ color: '#64748b', fontSize: '14px' }}>{t.location}</span>
+                        </div>
+
+                        {/* Social */}
+                        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center', animation: 'fadeUp 0.7s ease 0.55s both' }}>
+                            {SOCIAL(lang).map(({ label, icon: Icon, href }) => (
+                                <a key={label} href={href} target="_blank" rel="noreferrer"
+                                    className="social-link"
+                                    style={{ display: 'flex', alignItems: 'center', gap: '7px', padding: '8px 16px', borderRadius: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', color: '#94a3b8', fontSize: '14px', textDecoration: 'none' }}
+                                    onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = '#fff'; (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(99,102,241,0.5)' }}
+                                    onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = '#94a3b8'; (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,255,255,0.08)' }}
+                                >
+                                    <Icon size={16} />{label}
+                                </a>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* ── About ── */}
+                    <Section id="about" title={t.about}>
+                        <RevealSection delay={50}>
+                            <p style={{ color: '#94a3b8', lineHeight: 1.8, fontSize: '15px' }}>{t.aboutText}</p>
+                        </RevealSection>
+                    </Section>
+
+                    {/* ── Experience ── */}
+                    <Section id="experience" title={t.experience}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                            {t.experience_items.map((exp, i) => (
+                                <RevealSection key={i} delay={i * 80}>
+                                    <div className="card-hover" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '14px', padding: '20px 24px' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px', flexWrap: 'wrap', marginBottom: '6px' }}>
+                                            <div>
+                                                <h3 style={{ color: '#f1f5f9', fontSize: '15px', fontWeight: 600, marginBottom: '2px' }}>{exp.role}</h3>
+                                                <span style={{ color: '#6366f1', fontSize: '13px', fontWeight: 500 }}>{exp.company}</span>
+                                                <span style={{ color: '#475569', fontSize: '12px', marginLeft: '8px' }}>· {exp.location}</span>
+                                            </div>
+                                            <span style={{ fontSize: '12px', color: exp.current ? '#22c55e' : '#64748b', background: exp.current ? 'rgba(34,197,94,0.1)' : 'rgba(255,255,255,0.04)', border: `1px solid ${exp.current ? 'rgba(34,197,94,0.2)' : 'rgba(255,255,255,0.07)'}`, borderRadius: '99px', padding: '2px 10px', whiteSpace: 'nowrap' }}>
+                                                {exp.current ? t.present : exp.period}
+                                            </span>
+                                        </div>
+                                        {!exp.current && <p style={{ color: '#475569', fontSize: '12px', marginBottom: '6px' }}>{exp.period}</p>}
+                                        <p style={{ color: '#64748b', fontSize: '14px', lineHeight: 1.7, marginTop: '8px' }}>{exp.description}</p>
+                                    </div>
+                                </RevealSection>
+                            ))}
+                        </div>
+                    </Section>
+
+                    {/* ── Projects ── */}
+                    <Section id="projects" title={`${t.projects} (${t.projects_items.length})`}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                            {t.projects_items.map((p, i) => (
+                                <RevealSection key={i} delay={i * 80}>
+                                    <div className="card-hover" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '14px', padding: '20px 24px' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px', flexWrap: 'wrap', marginBottom: '10px' }}>
+                                            <h3 style={{ color: '#f1f5f9', fontSize: '15px', fontWeight: 600 }}>{p.title}</h3>
+                                            <span style={{ fontSize: '12px', color: p.statusColor, background: `${p.statusColor}18`, border: `1px solid ${p.statusColor}33`, borderRadius: '99px', padding: '2px 10px' }}>{p.status}</span>
+                                        </div>
+                                        <div style={{ display: 'flex', gap: '12px', marginBottom: '10px', flexWrap: 'wrap' }}>
+                                            <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#64748b', fontSize: '12px' }}><TagIcon size={12} />{p.type}</span>
+                                            <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#64748b', fontSize: '12px' }}><CalendarIcon size={12} />{p.date}</span>
+                                        </div>
+                                        <p style={{ color: '#64748b', fontSize: '14px', lineHeight: 1.7, marginBottom: '14px' }}>{p.description}</p>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                                            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                                                {p.tags.map(tag => (
+                                                    <span key={tag} style={{ fontSize: '11px', color: '#94a3b8', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '6px', padding: '2px 8px' }}>{tag}</span>
+                                                ))}
+                                            </div>
+                                            <a href={p.url} target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#6366f1', fontSize: '13px', textDecoration: 'none', fontWeight: 500 }}>
+                                                <ArrowSquareOutIcon size={14} />{t.website}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </RevealSection>
+                            ))}
+                        </div>
+                    </Section>
+
+                    {/* ── Education ── */}
+                    <Section id="education" title={t.education}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                            {t.education_items.map((e, i) => (
+                                <RevealSection key={i} delay={i * 80}>
+                                    <div className="card-hover" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '14px', padding: '20px 24px' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px', flexWrap: 'wrap', marginBottom: '4px' }}>
+                                            <h3 style={{ color: '#f1f5f9', fontSize: '15px', fontWeight: 600 }}>{e.institution}</h3>
+                                            <span style={{ color: '#64748b', fontSize: '12px' }}>{e.period}</span>
+                                        </div>
+                                        <p style={{ color: '#6366f1', fontSize: '13px', fontWeight: 500, marginBottom: '6px' }}>{e.degree}</p>
+                                        {e.detail && <p style={{ color: '#64748b', fontSize: '13px', lineHeight: 1.6 }}>{e.detail}</p>}
+                                    </div>
+                                </RevealSection>
+                            ))}
+                        </div>
+                    </Section>
+
+                    {/* ── Skills ── */}
+                    <Section id="skills" title={t.skills}>
+                        <RevealSection>
+                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                                {SKILLS.map((skill, i) => (
+                                    <span key={skill} style={{
+                                        color: '#cbd5e1', background: 'rgba(255,255,255,0.05)',
+                                        border: '1px solid rgba(255,255,255,0.09)',
+                                        borderRadius: '8px', padding: '6px 14px',
+                                        fontSize: '13px', fontWeight: 500,
+                                        animation: `skillPop 0.4s ease ${i * 40}ms both`,
+                                        cursor: 'default',
+                                        transition: 'background 0.2s, border-color 0.2s, color 0.2s',
+                                    }}
+                                        onMouseEnter={e => {
+                                            (e.currentTarget as HTMLSpanElement).style.background = 'rgba(99,102,241,0.15)'
+                                            ;(e.currentTarget as HTMLSpanElement).style.borderColor = 'rgba(99,102,241,0.4)'
+                                            ;(e.currentTarget as HTMLSpanElement).style.color = '#fff'
+                                        }}
+                                        onMouseLeave={e => {
+                                            (e.currentTarget as HTMLSpanElement).style.background = 'rgba(255,255,255,0.05)'
+                                            ;(e.currentTarget as HTMLSpanElement).style.borderColor = 'rgba(255,255,255,0.09)'
+                                            ;(e.currentTarget as HTMLSpanElement).style.color = '#cbd5e1'
+                                        }}
+                                    >
+                                        {skill}
+                                    </span>
+                                ))}
+                            </div>
+                        </RevealSection>
+                    </Section>
+
+                    {/* ── Blog ── */}
+                    {t.blog_items.length > 0 && (
+                        <Section id="blog" title={t.blog}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                {t.blog_items.map((post, i) => (
+                                    <RevealSection key={i} delay={i * 80}>
+                                        <a href="#"
+                                            className="card-hover"
+                                            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '14px', padding: '18px 24px', textDecoration: 'none' }}
+                                        >
+                                            <div>
+                                                <h3 style={{ color: '#f1f5f9', fontSize: '15px', fontWeight: 600, marginBottom: '4px' }}>{post.title}</h3>
+                                                <p style={{ color: '#64748b', fontSize: '13px' }}>{post.excerpt}</p>
+                                            </div>
+                                            <ArrowRightIcon size={18} style={{ color: '#6366f1', flexShrink: 0 }} />
+                                        </a>
+                                    </RevealSection>
+                                ))}
+                            </div>
+                        </Section>
+                    )}
+
+                    {/* Footer */}
+                    <div style={{ textAlign: 'center', paddingBottom: '48px', color: '#334155', fontSize: '13px' }}>
+                        {t.footer.replace('{year}', String(new Date().getFullYear()))}
+                    </div>
+                </div>
+            </div>
+        </>
     )
 }
