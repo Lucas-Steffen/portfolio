@@ -13,7 +13,7 @@ export function LangProvider({ children }: { children: ReactNode }) {
     const [lang, setLang] = useState<Lang>(() => {
         const stored = localStorage.getItem('portfolio-lang') as Lang | null
         if (stored === 'pt' || stored === 'en') return stored
-        return navigator.language.startsWith('pt') ? 'pt' : 'en'
+        return navigator.language.startsWith('en') ? 'pt' : 'en'
     })
 
     const toggle = () => {
@@ -29,6 +29,7 @@ export function LangProvider({ children }: { children: ReactNode }) {
     )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useLang() {
     const ctx = useContext(LangContext)
     if (!ctx) throw new Error('useLang deve ser usado dentro de <LangProvider>')
