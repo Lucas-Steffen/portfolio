@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useMemo, useCallback } from 'react'
 import {
     EnvelopeIcon,
     LinkedinLogoIcon,
@@ -99,7 +99,7 @@ const GITHUB_USERNAME = 'Lucas-Steffen'
 
 const SKILLS = [
     'JavaScript', 'TypeScript', 'React', 'Vue.js', 'Tailwind CSS',
-    'Node.js', 'PHP', 'Java', 'PostgreSQL', 'MySQL', 'Firebird',
+    'Node.js', 'Express.js','PostgreSQL', 'MySQL', 'Firebird',
     'Docker', 'Git', 'Agile/Kanban', 'Scrum',
 ]
 
@@ -224,6 +224,7 @@ function TypedRole({ roles }: { roles: string[] }) {
             if (display.length > 0) {
                 timeout = setTimeout(() => setDisplay(d => d.slice(0, -1)), 35)
             } else {
+                // eslint-disable-next-line react-hooks/set-state-in-effect
                 setRoleIdx(i => (i + 1) % roles.length)
                 setPhase('typing')
             }
@@ -329,6 +330,365 @@ function Section({ id, title, children }: { id: string; title: string; children:
     )
 }
 
+function roundRect(
+    ctx: CanvasRenderingContext2D,
+    x: number, y: number,
+    w: number, h: number,
+    r: number,
+) {
+    ctx.beginPath()
+    ctx.moveTo(x + r, y)
+    ctx.lineTo(x + w - r, y)
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r)
+    ctx.lineTo(x + w, y + h - r)
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h)
+    ctx.lineTo(x + r, y + h)
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r)
+    ctx.lineTo(x, y + r)
+    ctx.quadraticCurveTo(x, y, x + r, y)
+    ctx.closePath()
+}
+
+function formatDate(dateStr: string, lang: Lang): string {
+    const d = new Date(dateStr + 'T12:00:00')
+    return d.toLocaleDateString(lang === 'pt' ? 'pt-BR' : 'en-US', {
+        weekday: 'long',
+        month:   'long',
+        day:     'numeric',
+        year:    'numeric',
+    })
+}
+
+interface ContributionDay {
+    date:  string
+    count: number
+    level: number
+}
+
+interface TooltipState {
+    visible: boolean
+    x: number
+    y: number
+    date: string
+    count: number
+}
+
+function GitHubContributionSnake({ username, lang }: { username: string; lang: Lang }) {
+    const canvasRef  = useRef<HTMLCanvasElement>(null)
+    const wrapperRef = useRef<HTMLDivElement>(null)
+
+    const [stats,   setStats]   = useState<{ last30: number; lastYear: number } | null>(null)
+    const [tooltip, setTooltip] = useState<TooltipState>({ visible: false, x: 0, y: 0, date: '', count: 0 })
+
+    const gridRef     = useRef<number[][]>([])
+    const dateGridRef = useRef<ContributionDay[][]>([])
+
+    const pathIdxRef  = useRef(0)
+    const eatenRef    = useRef<Set<string>>(new Set())
+    const snakeRef    = useRef<[number, number][]>([])
+    const animRef     = useRef(0)
+    const lastStepRef = useRef(0)
+
+    const WEEKS     = 52
+    const DAYS      = 7
+    const CELL      = 10
+    const GAP       = 2
+    const STEP      = CELL + GAP
+    const W         = WEEKS * STEP - GAP
+    const H         = DAYS  * STEP - GAP
+    const SNAKE_LEN = 7
+    const SPEED_MS  = 55
+
+    const path = useMemo<[number, number][]>(() => {
+        const p: [number, number][] = []
+        for (let row = 0; row < DAYS; row++) {
+            for (let i = 0; i < WEEKS; i++) {
+                const col = row % 2 === 0 ? i : WEEKS - 1 - i
+                p.push([col, row])
+            }
+        }
+        return p
+    }, [])
+
+    useEffect(() => {
+        fetch(`https://github-contributions-api.jogruber.de/v4/${username}`)
+            .then(r => r.json())
+            .then(({ contributions }: { contributions: ContributionDay[]; total: Record<string, number> }) => {
+                const now = new Date()
+                const cutoff365 = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000)
+                const cutoff52w = new Date(now.getTime() - 52  * 7 * 24 * 60 * 60 * 1000)
+                const cutoff30  = new Date(now.getTime() - 30  * 24 * 60 * 60 * 1000)
+
+                const grid: number[][]               = Array.from({ length: WEEKS }, () => Array(DAYS).fill(0))
+                const dateGrid: ContributionDay[][] = Array.from({ length: WEEKS }, () =>
+                    Array(DAYS).fill(null).map(() => ({ date: '', count: 0, level: 0 }))
+                )
+
+                let last30    = 0
+                let lastYear  = 0  
+
+                contributions.forEach(c => {
+                    const d = new Date(c.date + 'T12:00:00')
+
+                    if (d >= cutoff52w) {
+                        const diffDays = Math.floor((d.getTime() - cutoff52w.getTime()) / 86400000)
+                        const col = Math.floor(diffDays / 7)
+                        const row = diffDays % 7
+                        if (col >= 0 && col < WEEKS) {
+                            grid[col][row]     = c.level
+                            dateGrid[col][row] = c
+                        }
+                    }
+
+                    // Contadores (365 dias e 30 dias)
+                    if (d >= cutoff365) lastYear += c.count
+                    if (d >= cutoff30)  last30   += c.count
+                })
+
+                gridRef.current     = grid
+                dateGridRef.current = dateGrid
+                setStats({ last30, lastYear })
+            })
+            .catch(() => {})
+    }, [username])
+
+    useEffect(() => {
+        const canvas = canvasRef.current
+        if (!canvas) return
+        const ctx = canvas.getContext('2d')!
+
+        const LEVEL_COLORS = [
+            'rgba(255,255,255,0.06)',
+            'rgba(99,102,241,0.28)',
+            'rgba(99,102,241,0.50)',
+            'rgba(99,102,241,0.74)',
+            'rgba(99,102,241,1.00)',
+        ]
+        const EATEN_COLOR = 'rgba(255,255,255,0.03)'
+
+        snakeRef.current   = [path[0]]
+        pathIdxRef.current = 0
+        eatenRef.current   = new Set()
+
+        const draw = (ts: number) => {
+            if (ts - lastStepRef.current >= SPEED_MS) {
+                lastStepRef.current = ts
+                const nextIdx = (pathIdxRef.current + 1) % path.length
+                pathIdxRef.current = nextIdx
+                const head = path[nextIdx]
+                snakeRef.current = [head, ...snakeRef.current.slice(0, SNAKE_LEN - 1)]
+                eatenRef.current.add(`${head[0]},${head[1]}`)
+                if (nextIdx === 0) eatenRef.current = new Set()
+            }
+
+            ctx.clearRect(0, 0, W, H)
+
+            const grid  = gridRef.current
+            const snake = snakeRef.current
+            const eaten = eatenRef.current
+
+            const snakeMap = new Map<string, number>()
+            snake.forEach(([c, r], i) => snakeMap.set(`${c},${r}`, i))
+
+            for (let col = 0; col < WEEKS; col++) {
+                for (let row = 0; row < DAYS; row++) {
+                    const x    = col * STEP
+                    const y    = row * STEP
+                    const key  = `${col},${row}`
+                    const sIdx = snakeMap.get(key)
+
+                    ctx.shadowBlur = 0
+
+                    if (sIdx !== undefined) {
+                        if (sIdx === 0) {
+                            ctx.shadowBlur  = 14
+                            ctx.shadowColor = '#22c55e'
+                            ctx.fillStyle   = '#22c55e'
+                        } else {
+                            const t = 1 - sIdx / SNAKE_LEN
+                            const a = t * 0.85 + 0.15
+                            ctx.shadowBlur  = 6 * t
+                            ctx.shadowColor = `rgba(34,197,94,${a})`
+                            ctx.fillStyle   = `rgba(34,197,94,${a})`
+                        }
+                    } else if (eaten.has(key)) {
+                        ctx.fillStyle = EATEN_COLOR
+                    } else {
+                        const level = grid[col]?.[row] ?? 0
+                        ctx.fillStyle = LEVEL_COLORS[Math.min(level, 4)]
+                    }
+
+                    roundRect(ctx, x, y, CELL, CELL, 2)
+                    ctx.fill()
+                    ctx.shadowBlur = 0
+                }
+            }
+
+            animRef.current = requestAnimationFrame(draw)
+        }
+
+        animRef.current = requestAnimationFrame(draw)
+        return () => cancelAnimationFrame(animRef.current)
+    }, [H, STEP, W, path])
+
+    const handleMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
+        const canvas = canvasRef.current
+        if (!canvas) return
+
+        const rect   = canvas.getBoundingClientRect()
+        const scaleX = W / rect.width
+        const scaleY = H / rect.height
+        const mx     = (e.clientX - rect.left) * scaleX
+        const my     = (e.clientY - rect.top)  * scaleY
+
+        const col        = Math.floor(mx / STEP)
+        const row        = Math.floor(my / STEP)
+        const cellX      = col * STEP
+        const cellY      = row * STEP
+        const insideCell = mx >= cellX && mx <= cellX + CELL && my >= cellY && my <= cellY + CELL
+
+        if (col >= 0 && col < WEEKS && row >= 0 && row < DAYS && insideCell) {
+            const day = dateGridRef.current[col]?.[row]
+            if (day && day.date) {
+                const wRect = wrapperRef.current?.getBoundingClientRect()
+                const tx    = e.clientX - (wRect?.left ?? 0)
+                const ty    = e.clientY - (wRect?.top  ?? 0)
+                setTooltip({ visible: true, x: tx, y: ty, date: day.date, count: day.count })
+                return
+            }
+        }
+        setTooltip(prev => prev.visible ? { ...prev, visible: false } : prev)
+    }, [WEEKS, STEP, CELL, W, H])
+
+    const handleMouseLeave = useCallback(() => {
+        setTooltip(prev => ({ ...prev, visible: false }))
+    }, [])
+
+    const labels = {
+        pt: {
+            d30:         'commits nos últimos 30 dias',
+            yr:          'commits no último ano',
+            noCommits:   'Nenhum commit em',
+            oneCommit:   'commit em',
+            manyCommits: 'commits em',
+        },
+        en: {
+            d30:         'commits in the last 30 days',
+            yr:          'commits in the last year',
+            noCommits:   'No commits on',
+            oneCommit:   'commit on',
+            manyCommits: 'commits on',
+        },
+    }[lang]
+
+    const tooltipText = tooltip.count === 0
+        ? `${labels.noCommits} ${formatDate(tooltip.date, lang)}`
+        : `${tooltip.count} ${tooltip.count === 1 ? labels.oneCommit : labels.manyCommits} ${formatDate(tooltip.date, lang)}`
+
+    return (
+        <div
+            ref={wrapperRef}
+            style={{
+                width:        '100%',
+                marginTop:    '28px',
+                marginBottom: '4px',
+                animation:    'fadeUp 0.7s ease 0.5s both',
+                position:     'relative',
+            }}
+        >
+            {/* Grid */}
+            <div style={{ overflowX: 'auto', paddingBottom: '4px' }}>
+                <canvas
+                    ref={canvasRef}
+                    width={W}
+                    height={H}
+                    onMouseMove={handleMouseMove}
+                    onMouseLeave={handleMouseLeave}
+                    style={{
+                        display:      'block',
+                        margin:       '0 auto',
+                        borderRadius: '6px',
+                        cursor:       'crosshair',
+                    }}
+                />
+            </div>
+
+            {/* Tooltip */}
+            {tooltip.visible && tooltip.date && (
+                <div
+                    style={{
+                        position:       'absolute',
+                        left:            tooltip.x,
+                        top:             tooltip.y - 48,
+                        transform:      'translateX(-50%)',
+                        pointerEvents:  'none',
+                        zIndex:          50,
+                        background:     'rgba(15,23,42,0.96)',
+                        border:         '1px solid rgba(255,255,255,0.10)',
+                        borderRadius:   '8px',
+                        padding:        '6px 12px',
+                        whiteSpace:     'nowrap',
+                        backdropFilter: 'blur(12px)',
+                        boxShadow:      '0 4px 20px rgba(0,0,0,0.45)',
+                        fontSize:       '12px',
+                        color:          '#cbd5e1',
+                        fontFamily:     "'DM Sans', sans-serif",
+                        lineHeight:      1.4,
+                    }}
+                >
+                    <span style={{
+                        display:       'inline-block',
+                        width:          '7px',
+                        height:         '7px',
+                        borderRadius:  '50%',
+                        background:    tooltip.count > 0 ? '#6366f1' : 'rgba(255,255,255,0.15)',
+                        marginRight:   '6px',
+                        verticalAlign: 'middle',
+                        boxShadow:     tooltip.count > 0 ? '0 0 6px rgba(99,102,241,0.6)' : 'none',
+                    }} />
+                    <span style={{ color: tooltip.count > 0 ? '#f1f5f9' : '#64748b' }}>
+                        {tooltipText}
+                    </span>
+                    <div style={{
+                        position:    'absolute',
+                        bottom:      '-5px',
+                        left:        '50%',
+                        transform:   'translateX(-50%) rotate(45deg)',
+                        width:        '8px',
+                        height:       '8px',
+                        background:  'rgba(15,23,42,0.96)',
+                        borderRight: '1px solid rgba(255,255,255,0.10)',
+                        borderBottom:'1px solid rgba(255,255,255,0.10)',
+                    }} />
+                </div>
+            )}
+
+            {/* Stats */}
+            {stats && (
+                <div style={{
+                    display:        'flex',
+                    gap:            '20px',
+                    justifyContent: 'center',
+                    marginTop:      '10px',
+                    flexWrap:       'wrap',
+                }}>
+                    {[
+                        { value: stats.last30,   label: labels.d30 },
+                        { value: stats.lastYear, label: labels.yr  },
+                    ].map(({ value, label }) => (
+                        <span key={label} style={{ color: '#64748b', fontSize: '12px' }}>
+                            <span style={{ color: '#e2e8f0', fontWeight: 700, fontSize: '13px' }}>
+                                {value.toLocaleString()}
+                            </span>
+                            {' '}{label}
+                        </span>
+                    ))}
+                </div>
+            )}
+        </div>
+    )
+}
+
 // ─── Home ─────────────────────────────────────────────────────────────────────
 
 export function Home() {
@@ -410,10 +770,11 @@ export function Home() {
                         </div>
 
                         {/* Location */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '28px', animation: 'fadeUp 0.7s ease 0.45s both' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '5px', animation: 'fadeUp 0.7s ease 0.45s both' }}>
                             <MapPinIcon size={14} style={{ color: '#64748b' }} />
-                            <span style={{ color: '#64748b', fontSize: '14px' }}>{t.location}</span>
+                            <span style={{ color: '#64748b', fontSize: '14px' }}>{t.location}</span>                            
                         </div>
+                        <GitHubContributionSnake username={GITHUB_USERNAME} lang={lang} />
 
                         {/* Social */}
                         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center', animation: 'fadeUp 0.7s ease 0.55s both' }}>
