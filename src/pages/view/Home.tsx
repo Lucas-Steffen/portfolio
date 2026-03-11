@@ -592,8 +592,6 @@ function GitHubContributionSnake({ username, lang }: { username: string; lang: L
                             dateGrid[col][row] = c
                         }
                     }
-
-                    // Contadores (365 dias e 30 dias)
                     if (d >= cutoff365) lastYear += c.count
                     if (d >= cutoff30) last30 += c.count
                 })
@@ -749,7 +747,6 @@ function GitHubContributionSnake({ username, lang }: { username: string; lang: L
                 position: 'relative',
             }}
         >
-            {/* Grid */}
             <div style={{ overflowX: 'auto', paddingBottom: '4px' }}>
                 <canvas
                     ref={canvasRef}
@@ -765,8 +762,6 @@ function GitHubContributionSnake({ username, lang }: { username: string; lang: L
                     }}
                 />
             </div>
-
-            {/* Tooltip */}
             {tooltip.visible && tooltip.date && (
                 <div
                     style={{
@@ -816,7 +811,6 @@ function GitHubContributionSnake({ username, lang }: { username: string; lang: L
                 </div>
             )}
 
-            {/* Stats */}
             {stats && (
                 <div style={{
                     display: 'flex',
@@ -873,11 +867,9 @@ export function Home() {
 
                 <div style={{ maxWidth: '760px', margin: '0 auto', padding: '0 20px', position: 'relative', zIndex: 1 }}>
 
-                    {/* ── Hero ── */}
                     <div id="hero" style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', paddingTop: '48px', paddingBottom: '72px' }}>
                         <HeroBlob />
 
-                        {/* Avatar with shimmer ring */}
                         <div style={{ position: 'relative', marginBottom: '24px', zIndex: 1, animation: 'fadeIn 0.8s ease' }}>
                             <div style={{
                                 width: '112px', height: '112px', borderRadius: '50%', padding: '3px',
@@ -897,7 +889,6 @@ export function Home() {
                             </div>
                         </div>
 
-                        {/* GitHub stats */}
                         {github && (
                             <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', flexWrap: 'wrap', justifyContent: 'center', animation: 'fadeUp 0.6s ease 0.1s both' }}>
                                 {([
@@ -913,24 +904,20 @@ export function Home() {
                             </div>
                         )}
 
-                        {/* Name */}
                         <h1 style={{ color: '#f1f5f9', fontSize: 'clamp(32px, 6vw, 52px)', fontWeight: 700, fontFamily: "'Sora', sans-serif", lineHeight: 1.1, marginBottom: '16px', letterSpacing: '-0.02em', animation: 'fadeUp 0.7s ease 0.2s both', zIndex: 1 }}>
                             Lucas G. Amorim Steffen
                         </h1>
 
-                        {/* Typed role */}
                         <div style={{ animation: 'fadeUp 0.7s ease 0.35s both', zIndex: 1 }}>
                             <TypedRole roles={t.roles} />
                         </div>
 
-                        {/* Location */}
                         <div style={{ display: 'flex', alignItems: 'center', gap: '5px', animation: 'fadeUp 0.7s ease 0.45s both' }}>
                             <MapPinIcon size={14} style={{ color: '#64748b' }} />
                             <span style={{ color: '#64748b', fontSize: '14px' }}>{t.location}</span>
                         </div>
                         <GitHubContributionSnake username={GITHUB_USERNAME} lang={lang} />
 
-                        {/* Social */}
                         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center', animation: 'fadeUp 0.7s ease 0.55s both' }}>
                             {SOCIAL(lang).map(({ label, icon: Icon, href }) => (
                                 <a key={label} href={href} target="_blank" rel="noreferrer"
@@ -945,14 +932,12 @@ export function Home() {
                         </div>
                     </div>
 
-                    {/* ── About ── */}
                     <Section id="about" title={t.about}>
                         <RevealSection delay={50}>
                             <p style={{ color: '#94a3b8', lineHeight: 1.8, fontSize: '15px' }}>{t.aboutText}</p>
                         </RevealSection>
                     </Section>
 
-                    {/* ── Experience ── */}
                     <Section id="experience" title={t.experience}>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                             {t.experience_items.map((exp, i) => (
@@ -976,7 +961,6 @@ export function Home() {
                         </div>
                     </Section>
 
-                    {/* ── Projects ── */}
                     <Section id="projects" title={`${t.projects} (${t.projects_items.length})`}>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                             {t.projects_items.map((p, i) => (
@@ -1007,7 +991,6 @@ export function Home() {
                         </div>
                     </Section>
 
-                    {/* ── Education ── */}
                     <Section id="education" title={t.education}>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                             {t.education_items.map((e, i) => (
@@ -1025,10 +1008,8 @@ export function Home() {
                         </div>
                     </Section>
 
-                    {/* ── Skills ── */}
                     <Section id="skills" title={t.skills}>
                         <RevealSection>
-                            {/* Filter tabs */}
                             <div style={{
                                 display: 'flex', gap: '8px', flexWrap: 'wrap',
                                 justifyContent: 'center', marginBottom: '32px',
@@ -1086,57 +1067,85 @@ export function Home() {
                                 {(Object.entries(SKILLS) as [keyof typeof SKILLS, typeof SKILLS.frontend][])
                                     .filter(([cat]) => activeSkillFilter === 'all' || cat === activeSkillFilter)
                                     .flatMap(([, items]) => items)
-                                    .map((skill, i) => (
-                                        <div
-                                            key={skill.name}
-                                            className="skill-card"
-                                            style={{
-                                                display: 'flex', flexDirection: 'column',
-                                                alignItems: 'center', justifyContent: 'center',
-                                                gap: '12px', padding: '22px 12px',
-                                                background: 'rgba(255,255,255,0.03)',
-                                                border: '1px solid rgba(255,255,255,0.07)',
-                                                borderRadius: '16px', cursor: 'default',
-                                                animation: `cardPop 0.35s ease ${i * 40}ms both`,
-                                            }}
-                                        >
-                                            {skill.icon ? (
-                                                <img
-                                                    src={skill.icon}
-                                                    alt={skill.name}
-                                                    width={42}
-                                                    height={42}
-                                                    style={{
-                                                        objectFit: 'contain',
-                                                        filter: skill.name === 'Express.js' ? 'invert(1) opacity(0.85)' : 'none',
-                                                        flexShrink: 0,
-                                                    }}
-                                                />
-                                            ) : (
-                                                <div style={{
-                                                    width: '42px', height: '42px', borderRadius: '10px',
-                                                    background: 'rgba(99,102,241,0.2)',
-                                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                                    fontSize: '18px', fontWeight: 800, color: '#a5b4fc',
+                                    .map((skill, i) => {
+                                        const pct = `${skill.level * 10}%`
+                                        const color = levelColor(skill.level)
+                                        return (
+                                            <div
+                                                key={skill.name}
+                                                className="skill-card"
+                                                title={levelLabel(skill.level, t.skillLegend)}
+                                                style={{
+                                                    display: 'flex', flexDirection: 'column',
+                                                    alignItems: 'center', justifyContent: 'center',
+                                                    gap: '10px', padding: '20px 12px 14px',
+                                                    background: 'rgba(255,255,255,0.03)',
+                                                    border: '1px solid rgba(255,255,255,0.07)',
+                                                    borderRadius: '16px', cursor: 'default',
+                                                    animation: `cardPop 0.35s ease ${i * 40}ms both`,
+                                                }}
+                                            >
+                                                {skill.icon ? (
+                                                    <img
+                                                        src={skill.icon}
+                                                        alt={skill.name}
+                                                        width={42} height={42}
+                                                        style={{
+                                                            objectFit: 'contain',
+                                                            filter: skill.name === 'Express.js' ? 'invert(1) opacity(0.85)' : 'none',
+                                                            flexShrink: 0,
+                                                        }}
+                                                    />
+                                                ) : (
+                                                    <div style={{
+                                                        width: '42px', height: '42px', borderRadius: '10px',
+                                                        background: 'rgba(99,102,241,0.2)',
+                                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                        fontSize: '18px', fontWeight: 800, color: '#a5b4fc',
+                                                    }}>
+                                                        {skill.name[0]}
+                                                    </div>
+                                                )}
+                                                <span style={{
+                                                    color: '#94a3b8', fontSize: '12px',
+                                                    fontWeight: 500, textAlign: 'center', lineHeight: 1.3,
                                                 }}>
-                                                    {skill.name[0]}
+                                                    {skill.name}
+                                                </span>
+                                                <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                                    <div style={{
+                                                        width: '100%', height: '4px', borderRadius: '99px',
+                                                        background: 'rgba(255,255,255,0.06)', overflow: 'hidden',
+                                                    }}>
+                                                        <div
+                                                            className="skill-bar-fill"
+                                                            style={{
+                                                                height: '100%',
+                                                                borderRadius: '99px',
+                                                                background: `linear-gradient(90deg, ${color}99, ${color})`,
+                                                                boxShadow: `0 0 8px ${color}66`,
+                                                                ['--bar-w' as string]: pct,
+                                                                width: pct,
+                                                                animationDelay: `${i * 40 + 200}ms`,
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div style={{
+                                                        display: 'flex', justifyContent: 'flex-end',
+                                                        alignItems: 'center',
+                                                    }}>
+                                                        <span style={{ color, fontSize: '10px', fontWeight: 700 }}>
+                                                            {skill.level}/10
+                                                        </span>
+                                                    </div>
                                                 </div>
-                                            )}
-                                            <span style={{
-                                                color: '#94a3b8', fontSize: '12px',
-                                                fontWeight: 500, textAlign: 'center',
-                                                lineHeight: 1.3,
-                                            }}>
-                                                {skill.name}
-                                            </span>
-                                        </div>
-                                    ))
+                                            </div>
+                                        )
+                                    })
                                 }
                             </div>
                         </RevealSection>
                     </Section>
-
-                    {/* ── Blog ── */}
                     {t.blog_items.length > 0 && (
                         <Section id="blog" title={t.blog}>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -1158,7 +1167,6 @@ export function Home() {
                         </Section>
                     )}
 
-                    {/* Footer */}
                     <div style={{ textAlign: 'center', paddingBottom: '48px', color: '#334155', fontSize: '13px' }}>
                         {t.footer.replace('{year}', String(new Date().getFullYear()))}
                     </div>
