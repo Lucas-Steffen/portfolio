@@ -28,6 +28,18 @@ type Lang = 'pt' | 'en'
 
 // ─── Translations ─────────────────────────────────────────────────────────────
 
+function levelColor(level: number): string {
+    if (level <= 4) return '#f59e0b'
+    if (level === 5) return '#6366f1'
+    return '#22c55e'
+}
+
+function levelLabel(level: number, legend: { range: string; label: string }[]): string {
+    if (level <= 4) return legend[0].label
+    if (level === 5) return legend[1].label
+    return legend[2].label
+}
+
 const T = {
     pt: {
         openToWork: 'Aberto a oportunidades',
@@ -37,7 +49,7 @@ const T = {
         followers: 'Seguidores',
         following: 'Seguindo',
         about: 'Sobre',
-        aboutText: 'Desenvolvedor Web Full-Stack com experiência prática adquirida por meio de projetos próprios, desenvolvimento de APIs e soluções aplicadas ao uso real no dia a dia. Tenho sólida base em desenvolvimento front-end e back-end, com foco em organização, clareza de código, desempenho e escalabilidade. Atualmente curso Engenharia de Software.',
+        aboutText: 'Desenvolvedor Web Full-Stack com experiência prática em projetos próprios, desenvolvimento de APIs e soluções voltadas ao uso real. Possuo base sólida em front-end e back-end, com foco em organização, legibilidade de código, desempenho e escalabilidade. Atualmente cursando Engenharia de Software, busco constantemente evoluir técnica e profissionalmente.',
         experience: 'Experiência',
         projects: 'Projetos',
         education: 'Educação',
@@ -47,17 +59,66 @@ const T = {
         website: 'Site',
         footer: '© {year} Lucas G. Amorim Steffen',
         experience_items: [
-            { role: 'Desenvolvedor Full-Stack Jr', company: 'VF PAR', description: 'Atuação no desenvolvimento dos sistemas da empresa', current: true },
-            { role: 'Analista de Q.A', company: 'TopSapp', location: 'Sinop, MT – Brasil', period: 'Dezembro 2025 – Março 2026', description: 'Atuação em testes funcionais, regressão e validação de fluxos críticos em sistemas web, assegurando estabilidade antes e após deploy.', current: false },
-            { role: 'Analista de Implantação a Sistemas', company: 'Ecocentauro', location: 'Sinop, MT – Brasil', period: 'Janeiro 2024 – Dezembro 2025', description: 'Desenvolvimento de relatórios detalhados utilizando Crystal Reports e FastReports, com uso de SQL para extrair e formatar dados conforme requisitos específicos.', current: false },
-            { role: 'Assistente Administrativo', company: 'Autoescola Meridional', location: 'Sinop, MT – Brasil', period: 'Fevereiro 2023 – Janeiro 2024', description: 'Agendamento de aulas, envio de aulas, arquivamento e montagem de processos de CNH.', current: false },
+            {
+                role: 'Desenvolvedor Full-Stack Jr',
+                company: 'VF PAR',
+                description: 'Desenvolvimento e manutenção dos sistemas internos da empresa, atuando tanto no front-end quanto no back-end. Participação ativa em decisões técnicas, implementação de funcionalidades e melhoria contínua dos produtos.',
+                current: true
+            },
+            {
+                role: 'Analista de Q.A',
+                company: 'TopSapp',
+                location: 'Sinop, MT – Brasil',
+                period: 'Dezembro 2025 – Março 2026',
+                description: 'Execução de testes funcionais, de regressão e validação de fluxos críticos em sistemas web. Identificação e documentação de bugs, garantindo estabilidade e qualidade das entregas antes e após cada deploy.',
+                current: false
+            },
+            {
+                role: 'Analista de Implantação de Sistemas',
+                company: 'Ecocentauro',
+                location: 'Sinop, MT – Brasil',
+                period: 'Janeiro 2024 – Dezembro 2025',
+                description: 'Criação de relatórios detalhados com Crystal Reports e FastReports, utilizando SQL para extração, tratamento e formatação de dados conforme requisitos de cada cliente. Apoio na implantação e configuração de sistemas, garantindo aderência aos processos do negócio.',
+                current: false
+            },
+            {
+                role: 'Assistente Administrativo',
+                company: 'Autoescola Meridional',
+                location: 'Sinop, MT – Brasil',
+                period: 'Fevereiro 2023 – Janeiro 2024',
+                description: 'Gestão de agendamentos de aulas teóricas e práticas, controle de documentação e montagem de processos para emissão de CNH, assegurando conformidade com as exigências do DETRAN.',
+                current: false
+            },
         ],
         education_items: [
-            { institution: 'Estácio', period: '2025 – 2029', degree: 'Bacharelado em Engenharia de Software (Em andamento)', detail: 'Previsão de conclusão: 2029 · 2º Semestre' },
+            {
+                institution: 'Estácio',
+                period: '2025 – 2029',
+                degree: 'Bacharelado em Engenharia de Software (Em andamento)',
+                detail: 'Previsão de conclusão: 2029 · 2º Semestre'
+            },
         ],
         projects_items: [
-            { title: 'Conversy', status: 'Ao vivo', type: 'Sistema de gestão de SDRs', date: '2026', description: 'Sistema desenvolvido com React, Typescript, Tailwind CSS e backend com Node.Js, Express.Js e PostgreSQL.', tags: ['React', 'Typescript', 'Tailwind CSS', 'Node.js', 'Express.js', 'PostgreSQL'], url: 'https://conversy.up.railway.app/', statusColor: '#22c55e' },
-            { title: 'Portfólio Pessoal', status: 'Ao vivo', type: 'Projeto pessoal', date: '2026', description: 'Portfólio desenvolvido com React, TypeScript e Tailwind CSS, com integração à API do GitHub e sistema de internacionalização PT/EN.', tags: ['React', 'TypeScript', 'Tailwind CSS', 'GitHub API'], url: '#', statusColor: '#22c55e' },
+            {
+                title: 'Conversy',
+                status: 'Ao vivo',
+                type: 'Sistema de gestão de SDRs',
+                date: '2026',
+                description: 'Plataforma completa para gestão de times de SDR, com controle de leads, acompanhamento de metas e visão gerencial.',
+                tags: ['React', 'Typescript', 'Tailwind CSS', 'Node.js', 'Express.js', 'PostgreSQL'],
+                url: 'https://conversy.up.railway.app/',
+                statusColor: '#22c55e'
+            },
+            {
+                title: 'Portfólio Pessoal',
+                status: 'Ao vivo',
+                type: 'Projeto pessoal',
+                date: '2026',
+                description: 'Portfólio desenvolvido com React, TypeScript e Tailwind CSS. Conta com integração à API do GitHub para exibição de dados em tempo real e sistema de internacionalização PT/EN para alcance de recrutadores nacionais e internacionais.',
+                tags: ['React', 'TypeScript', 'Tailwind CSS', 'GitHub API'],
+                url: '#',
+                statusColor: '#22c55e'
+            },
         ],
         blog_items: [] as { title: string; excerpt: string; date: string }[],
         skillCategories: {
@@ -67,6 +128,11 @@ const T = {
             database: 'Banco de Dados',
             tools: 'Ferramentas',
         },
+        skillLegend: [
+            { range: '0–4', label: 'Básico' },
+            { range: '5', label: 'Conheço e utilizo' },
+            { range: '6–10', label: 'Intermediário / Avançado' },
+        ],
     },
     en: {
         openToWork: 'Open to work',
@@ -76,7 +142,7 @@ const T = {
         followers: 'Followers',
         following: 'Following',
         about: 'About',
-        aboutText: 'Full-Stack Web Developer with practical experience gained through personal projects, API development, and real-world solutions. I have a solid foundation in front-end and back-end development, focusing on code organization, clarity, performance, and scalability. Currently studying Software Engineering.',
+        aboutText: 'Full-Stack Web Developer with hands-on experience in personal projects, API development, and real-world solutions. I have a solid foundation in both front-end and back-end development, with a focus on code organization, readability, performance, and scalability. Currently pursuing a degree in Software Engineering, I am constantly seeking to grow both technically and professionally.',
         experience: 'Experience',
         projects: 'Projects',
         education: 'Education',
@@ -86,17 +152,66 @@ const T = {
         website: 'Website',
         footer: '© {year} Lucas G. Amorim Steffen',
         experience_items: [
-            { role: 'Junior Full-Stack Developer', company: 'VF PAR', description: 'Involvement in the development of the company systems.', current: true },
-            { role: 'Q.A. Analyst', company: 'TopSapp', location: 'Sinop, MT – Brazil', period: 'December 2025 – March 2026', description: 'Performed functional testing, regression, and validation of critical workflows in web systems, ensuring stability before and after deployments.', current: false },
-            { role: 'Systems Implementation Analyst', company: 'Ecocentauro', location: 'Sinop, MT – Brazil', period: 'January 2024 – December 2025', description: 'Assisted in creating detailed reports using Crystal Reports and FastReports, leveraging SQL to extract and format data according to specific requirements.', current: false },
-            { role: 'Administrative Assistant', company: 'Autoescola Meridional', location: 'Sinop, MT – Brazil', period: 'February 2023 – January 2024', description: 'Managed class scheduling, lesson delivery, archiving CNH processes, and assembling CNH documentation.', current: false },
+            {
+                role: 'Junior Full-Stack Developer',
+                company: 'VF PAR',
+                description: 'Development and maintenance of internal company systems, working across both front-end and back-end layers. Actively involved in technical decisions, feature implementation, and continuous product improvement.',
+                current: true
+            },
+            {
+                role: 'Q.A. Analyst',
+                company: 'TopSapp',
+                location: 'Sinop, MT – Brazil',
+                period: 'December 2025 – March 2026',
+                description: 'Executed functional, regression, and critical workflow testing across web systems. Identified and documented bugs, ensuring product stability and quality before and after each deployment.',
+                current: false
+            },
+            {
+                role: 'Systems Implementation Analyst',
+                company: 'Ecocentauro',
+                location: 'Sinop, MT – Brazil',
+                period: 'January 2024 – December 2025',
+                description: 'Built detailed reports using Crystal Reports and FastReports, leveraging SQL to extract, process, and format data according to client-specific requirements. Supported system deployment and configuration, ensuring alignment with business processes.',
+                current: false
+            },
+            {
+                role: 'Administrative Assistant',
+                company: 'Autoescola Meridional',
+                location: 'Sinop, MT – Brazil',
+                period: 'February 2023 – January 2024',
+                description: 'Managed scheduling of theoretical and practical driving lessons, handled documentation, and assembled CNH (driver\'s license) application files in compliance with DETRAN requirements.',
+                current: false
+            },
         ],
         education_items: [
-            { institution: 'Estácio', period: '2025 – 2029', degree: "Bachelor's in Software Engineering (Ongoing)", detail: 'Expected graduation: 2029 · 2st Semester' },
+            {
+                institution: 'Estácio',
+                period: '2025 – 2029',
+                degree: "Bachelor's in Software Engineering (Ongoing)",
+                detail: 'Expected graduation: 2029 · 2nd Semester'
+            },
         ],
         projects_items: [
-            { title: 'Conversy', status: 'Live', type: 'SDR management system', date: '2026', description: 'System developed with React, Typescript, Tailwind CSS and backend with Node.Js, Express.Js and PostgreSQL.', tags: ['React', 'Typescript', 'Tailwind CSS', 'Node.js', 'Express.js', 'PostgreSQL'], url: 'https://conversy.up.railway.app/', statusColor: '#22c55e' },
-            { title: 'Personal Portfolio', status: 'Live', type: 'Personal project', date: '2026', description: 'Portfolio built with React, TypeScript and Tailwind CSS, featuring GitHub API integration and a PT/EN internationalization system.', tags: ['React', 'TypeScript', 'Tailwind CSS', 'GitHub API'], url: '#', statusColor: '#22c55e' },
+            {
+                title: 'Conversy',
+                status: 'Live',
+                type: 'SDR management system',
+                date: '2026',
+                description: 'A complete platform for managing SDR teams, featuring lead tracking, goal monitoring, and management dashboards.',
+                tags: ['React', 'Typescript', 'Tailwind CSS', 'Node.js', 'Express.js', 'PostgreSQL'],
+                url: 'https://conversy.up.railway.app/',
+                statusColor: '#22c55e'
+            },
+            {
+                title: 'Personal Portfolio',
+                status: 'Live',
+                type: 'Personal project',
+                date: '2026',
+                description: 'Portfolio built with React, TypeScript, and Tailwind CSS. Features real-time GitHub API integration and a PT/EN internationalization system designed to reach both local and international recruiters.',
+                tags: ['React', 'TypeScript', 'Tailwind CSS', 'GitHub API'],
+                url: '#',
+                statusColor: '#22c55e'
+            },
         ],
         blog_items: [] as { title: string; excerpt: string; date: string }[],
         skillCategories: {
@@ -106,6 +221,11 @@ const T = {
             database: 'Database',
             tools: 'Tools',
         },
+        skillLegend: [
+            { range: '0–4', label: 'Basic' },
+            { range: '5', label: 'Know & use it' },
+            { range: '6–10', label: 'Intermediate / Advanced' },
+        ],
     },
 }
 
@@ -113,26 +233,26 @@ const GITHUB_USERNAME = 'Lucas-Steffen'
 
 const SKILLS = {
     frontend: [
-        { name: 'JavaScript', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg' },
-        { name: 'TypeScript', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg' },
-        { name: 'React', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg' },
-        { name: 'Vue.js', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg' },
-        { name: 'Tailwind CSS', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg' },
+        { name: 'JavaScript', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg', level: 5 },
+        { name: 'TypeScript', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg', level: 5 },
+        { name: 'React', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg', level: 6 },
+        { name: 'Vue.js', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg', level: 4 },
+        { name: 'Tailwind CSS', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg', level: 6 },
     ],
     backend: [
-        { name: 'Node.js', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg' },
-        { name: 'Express.js', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg' },
+        { name: 'Node.js', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg', level: 7 },
+        { name: 'Express.js', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg', level: 7 },
     ],
     database: [
-        { name: 'PostgreSQL', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg' },
-        { name: 'MySQL', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg' },
-        { name: 'Firebird', icon: null }, // sem ícone oficial no devicons
+        { name: 'PostgreSQL', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg', level: 7 },
+        { name: 'MySQL', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg', level: 5 },
+        { name: 'Firebird', icon: null, level: 7 },
     ],
     tools: [
-        { name: 'Docker', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg' },
-        { name: 'Git', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg' },
-        { name: 'Agile/Kanban', icon: null },
-        { name: 'Scrum', icon: null },
+        { name: 'Docker', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg', level: 6 },
+        { name: 'Git', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg', level: 8 },
+        { name: 'Agile/Kanban', icon: null, level: 7 },
+        { name: 'Scrum', icon: null, level: 5 },
     ],
 }
 
@@ -936,8 +1056,28 @@ export function Home() {
                                     )
                                 })}
                             </div>
-
-                            {/* Cards grid */}
+                            <div style={{
+                                display: 'flex', gap: '16px', flexWrap: 'wrap',
+                                justifyContent: 'center', marginBottom: '24px',
+                            }}>
+                                {[
+                                    { color: '#f59e0b', text: t.skillLegend[0] },
+                                    { color: '#6366f1', text: t.skillLegend[1] },
+                                    { color: '#22c55e', text: t.skillLegend[2] },
+                                ].map(({ color, text }) => (
+                                    <div key={text.range} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                        <div style={{
+                                            width: '8px', height: '8px', borderRadius: '50%',
+                                            background: color, boxShadow: `0 0 6px ${color}88`,
+                                            flexShrink: 0,
+                                        }} />
+                                        <span style={{ color: '#475569', fontSize: '11px' }}>
+                                            <span style={{ color: '#64748b', fontWeight: 600 }}>{text.range}</span>
+                                            {' — '}{text.label}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
                             <div style={{
                                 display: 'grid',
                                 gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))',
