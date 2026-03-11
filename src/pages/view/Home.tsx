@@ -47,7 +47,7 @@ const T = {
         website: 'Site',
         footer: '© {year} Lucas G. Amorim Steffen',
         experience_items: [
-            { role: 'Desenvolvedor Jr', company: 'VF PAR', description: 'Atuação no desenvolvimento dos sistemas da empresa', current: true},
+            { role: 'Desenvolvedor Full-Stack Jr', company: 'VF PAR', description: 'Atuação no desenvolvimento dos sistemas da empresa', current: true },
             { role: 'Analista de Q.A', company: 'TopSapp', location: 'Sinop, MT – Brasil', period: 'Dezembro 2025 – Março 2026', description: 'Atuação em testes funcionais, regressão e validação de fluxos críticos em sistemas web, assegurando estabilidade antes e após deploy.', current: false },
             { role: 'Analista de Implantação a Sistemas', company: 'Ecocentauro', location: 'Sinop, MT – Brasil', period: 'Janeiro 2024 – Dezembro 2025', description: 'Desenvolvimento de relatórios detalhados utilizando Crystal Reports e FastReports, com uso de SQL para extrair e formatar dados conforme requisitos específicos.', current: false },
             { role: 'Assistente Administrativo', company: 'Autoescola Meridional', location: 'Sinop, MT – Brasil', period: 'Fevereiro 2023 – Janeiro 2024', description: 'Agendamento de aulas, envio de aulas, arquivamento e montagem de processos de CNH.', current: false },
@@ -60,6 +60,13 @@ const T = {
             { title: 'Portfólio Pessoal', status: 'Ao vivo', type: 'Projeto pessoal', date: '2026', description: 'Portfólio desenvolvido com React, TypeScript e Tailwind CSS, com integração à API do GitHub e sistema de internacionalização PT/EN.', tags: ['React', 'TypeScript', 'Tailwind CSS', 'GitHub API'], url: '#', statusColor: '#22c55e' },
         ],
         blog_items: [] as { title: string; excerpt: string; date: string }[],
+        skillCategories: {
+            all: 'Todos',
+            frontend: 'Frontend',
+            backend: 'Backend',
+            database: 'Banco de Dados',
+            tools: 'Ferramentas',
+        },
     },
     en: {
         openToWork: 'Open to work',
@@ -79,7 +86,7 @@ const T = {
         website: 'Website',
         footer: '© {year} Lucas G. Amorim Steffen',
         experience_items: [
-            { role: 'Junior Developer', company: 'VF PAR', description: 'Involvement in the development of the company systems.', current: true},
+            { role: 'Junior Full-Stack Developer', company: 'VF PAR', description: 'Involvement in the development of the company systems.', current: true },
             { role: 'Q.A. Analyst', company: 'TopSapp', location: 'Sinop, MT – Brazil', period: 'December 2025 – March 2026', description: 'Performed functional testing, regression, and validation of critical workflows in web systems, ensuring stability before and after deployments.', current: false },
             { role: 'Systems Implementation Analyst', company: 'Ecocentauro', location: 'Sinop, MT – Brazil', period: 'January 2024 – December 2025', description: 'Assisted in creating detailed reports using Crystal Reports and FastReports, leveraging SQL to extract and format data according to specific requirements.', current: false },
             { role: 'Administrative Assistant', company: 'Autoescola Meridional', location: 'Sinop, MT – Brazil', period: 'February 2023 – January 2024', description: 'Managed class scheduling, lesson delivery, archiving CNH processes, and assembling CNH documentation.', current: false },
@@ -92,16 +99,42 @@ const T = {
             { title: 'Personal Portfolio', status: 'Live', type: 'Personal project', date: '2026', description: 'Portfolio built with React, TypeScript and Tailwind CSS, featuring GitHub API integration and a PT/EN internationalization system.', tags: ['React', 'TypeScript', 'Tailwind CSS', 'GitHub API'], url: '#', statusColor: '#22c55e' },
         ],
         blog_items: [] as { title: string; excerpt: string; date: string }[],
+        skillCategories: {
+            all: 'All',
+            frontend: 'Frontend',
+            backend: 'Backend',
+            database: 'Database',
+            tools: 'Tools',
+        },
     },
 }
 
 const GITHUB_USERNAME = 'Lucas-Steffen'
 
-const SKILLS = [
-    'JavaScript', 'TypeScript', 'React', 'Vue.js', 'Tailwind CSS',
-    'Node.js', 'Express.js','PostgreSQL', 'MySQL', 'Firebird',
-    'Docker', 'Git', 'Agile/Kanban', 'Scrum',
-]
+const SKILLS = {
+    frontend: [
+        { name: 'JavaScript', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg' },
+        { name: 'TypeScript', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg' },
+        { name: 'React', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg' },
+        { name: 'Vue.js', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg' },
+        { name: 'Tailwind CSS', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg' },
+    ],
+    backend: [
+        { name: 'Node.js', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg' },
+        { name: 'Express.js', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg' },
+    ],
+    database: [
+        { name: 'PostgreSQL', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg' },
+        { name: 'MySQL', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg' },
+        { name: 'Firebird', icon: null }, // sem ícone oficial no devicons
+    ],
+    tools: [
+        { name: 'Docker', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg' },
+        { name: 'Git', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg' },
+        { name: 'Agile/Kanban', icon: null },
+        { name: 'Scrum', icon: null },
+    ],
+}
 
 const SOCIAL = (lang: Lang) => [
     { label: lang === 'pt' ? 'E-mail' : 'Email', icon: EnvelopeIcon, href: 'mailto:lucasgabriel.programador@gmail.com' },
@@ -353,14 +386,14 @@ function formatDate(dateStr: string, lang: Lang): string {
     const d = new Date(dateStr + 'T12:00:00')
     return d.toLocaleDateString(lang === 'pt' ? 'pt-BR' : 'en-US', {
         weekday: 'long',
-        month:   'long',
-        day:     'numeric',
-        year:    'numeric',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
     })
 }
 
 interface ContributionDay {
-    date:  string
+    date: string
     count: number
     level: number
 }
@@ -374,30 +407,30 @@ interface TooltipState {
 }
 
 function GitHubContributionSnake({ username, lang }: { username: string; lang: Lang }) {
-    const canvasRef  = useRef<HTMLCanvasElement>(null)
+    const canvasRef = useRef<HTMLCanvasElement>(null)
     const wrapperRef = useRef<HTMLDivElement>(null)
 
-    const [stats,   setStats]   = useState<{ last30: number; lastYear: number } | null>(null)
+    const [stats, setStats] = useState<{ last30: number; lastYear: number } | null>(null)
     const [tooltip, setTooltip] = useState<TooltipState>({ visible: false, x: 0, y: 0, date: '', count: 0 })
 
-    const gridRef     = useRef<number[][]>([])
+    const gridRef = useRef<number[][]>([])
     const dateGridRef = useRef<ContributionDay[][]>([])
 
-    const pathIdxRef  = useRef(0)
-    const eatenRef    = useRef<Set<string>>(new Set())
-    const snakeRef    = useRef<[number, number][]>([])
-    const animRef     = useRef(0)
+    const pathIdxRef = useRef(0)
+    const eatenRef = useRef<Set<string>>(new Set())
+    const snakeRef = useRef<[number, number][]>([])
+    const animRef = useRef(0)
     const lastStepRef = useRef(0)
 
-    const WEEKS     = 52
-    const DAYS      = 7
-    const CELL      = 10
-    const GAP       = 2
-    const STEP      = CELL + GAP
-    const W         = WEEKS * STEP - GAP
-    const H         = DAYS  * STEP - GAP
+    const WEEKS = 52
+    const DAYS = 7
+    const CELL = 10
+    const GAP = 2
+    const STEP = CELL + GAP
+    const W = WEEKS * STEP - GAP
+    const H = DAYS * STEP - GAP
     const SNAKE_LEN = 7
-    const SPEED_MS  = 55
+    const SPEED_MS = 55
 
     const path = useMemo<[number, number][]>(() => {
         const p: [number, number][] = []
@@ -416,16 +449,16 @@ function GitHubContributionSnake({ username, lang }: { username: string; lang: L
             .then(({ contributions }: { contributions: ContributionDay[]; total: Record<string, number> }) => {
                 const now = new Date()
                 const cutoff365 = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000)
-                const cutoff52w = new Date(now.getTime() - 52  * 7 * 24 * 60 * 60 * 1000)
-                const cutoff30  = new Date(now.getTime() - 30  * 24 * 60 * 60 * 1000)
+                const cutoff52w = new Date(now.getTime() - 52 * 7 * 24 * 60 * 60 * 1000)
+                const cutoff30 = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
 
-                const grid: number[][]               = Array.from({ length: WEEKS }, () => Array(DAYS).fill(0))
+                const grid: number[][] = Array.from({ length: WEEKS }, () => Array(DAYS).fill(0))
                 const dateGrid: ContributionDay[][] = Array.from({ length: WEEKS }, () =>
                     Array(DAYS).fill(null).map(() => ({ date: '', count: 0, level: 0 }))
                 )
 
-                let last30    = 0
-                let lastYear  = 0  
+                let last30 = 0
+                let lastYear = 0
 
                 contributions.forEach(c => {
                     const d = new Date(c.date + 'T12:00:00')
@@ -435,21 +468,21 @@ function GitHubContributionSnake({ username, lang }: { username: string; lang: L
                         const col = Math.floor(diffDays / 7)
                         const row = diffDays % 7
                         if (col >= 0 && col < WEEKS) {
-                            grid[col][row]     = c.level
+                            grid[col][row] = c.level
                             dateGrid[col][row] = c
                         }
                     }
 
                     // Contadores (365 dias e 30 dias)
                     if (d >= cutoff365) lastYear += c.count
-                    if (d >= cutoff30)  last30   += c.count
+                    if (d >= cutoff30) last30 += c.count
                 })
 
-                gridRef.current     = grid
+                gridRef.current = grid
                 dateGridRef.current = dateGrid
                 setStats({ last30, lastYear })
             })
-            .catch(() => {})
+            .catch(() => { })
     }, [username])
 
     useEffect(() => {
@@ -466,9 +499,9 @@ function GitHubContributionSnake({ username, lang }: { username: string; lang: L
         ]
         const EATEN_COLOR = 'rgba(255,255,255,0.03)'
 
-        snakeRef.current   = [path[0]]
+        snakeRef.current = [path[0]]
         pathIdxRef.current = 0
-        eatenRef.current   = new Set()
+        eatenRef.current = new Set()
 
         const draw = (ts: number) => {
             if (ts - lastStepRef.current >= SPEED_MS) {
@@ -483,7 +516,7 @@ function GitHubContributionSnake({ username, lang }: { username: string; lang: L
 
             ctx.clearRect(0, 0, W, H)
 
-            const grid  = gridRef.current
+            const grid = gridRef.current
             const snake = snakeRef.current
             const eaten = eatenRef.current
 
@@ -492,24 +525,24 @@ function GitHubContributionSnake({ username, lang }: { username: string; lang: L
 
             for (let col = 0; col < WEEKS; col++) {
                 for (let row = 0; row < DAYS; row++) {
-                    const x    = col * STEP
-                    const y    = row * STEP
-                    const key  = `${col},${row}`
+                    const x = col * STEP
+                    const y = row * STEP
+                    const key = `${col},${row}`
                     const sIdx = snakeMap.get(key)
 
                     ctx.shadowBlur = 0
 
                     if (sIdx !== undefined) {
                         if (sIdx === 0) {
-                            ctx.shadowBlur  = 14
+                            ctx.shadowBlur = 14
                             ctx.shadowColor = '#22c55e'
-                            ctx.fillStyle   = '#22c55e'
+                            ctx.fillStyle = '#22c55e'
                         } else {
                             const t = 1 - sIdx / SNAKE_LEN
                             const a = t * 0.85 + 0.15
-                            ctx.shadowBlur  = 6 * t
+                            ctx.shadowBlur = 6 * t
                             ctx.shadowColor = `rgba(34,197,94,${a})`
-                            ctx.fillStyle   = `rgba(34,197,94,${a})`
+                            ctx.fillStyle = `rgba(34,197,94,${a})`
                         }
                     } else if (eaten.has(key)) {
                         ctx.fillStyle = EATEN_COLOR
@@ -535,24 +568,24 @@ function GitHubContributionSnake({ username, lang }: { username: string; lang: L
         const canvas = canvasRef.current
         if (!canvas) return
 
-        const rect   = canvas.getBoundingClientRect()
+        const rect = canvas.getBoundingClientRect()
         const scaleX = W / rect.width
         const scaleY = H / rect.height
-        const mx     = (e.clientX - rect.left) * scaleX
-        const my     = (e.clientY - rect.top)  * scaleY
+        const mx = (e.clientX - rect.left) * scaleX
+        const my = (e.clientY - rect.top) * scaleY
 
-        const col        = Math.floor(mx / STEP)
-        const row        = Math.floor(my / STEP)
-        const cellX      = col * STEP
-        const cellY      = row * STEP
+        const col = Math.floor(mx / STEP)
+        const row = Math.floor(my / STEP)
+        const cellX = col * STEP
+        const cellY = row * STEP
         const insideCell = mx >= cellX && mx <= cellX + CELL && my >= cellY && my <= cellY + CELL
 
         if (col >= 0 && col < WEEKS && row >= 0 && row < DAYS && insideCell) {
             const day = dateGridRef.current[col]?.[row]
             if (day && day.date) {
                 const wRect = wrapperRef.current?.getBoundingClientRect()
-                const tx    = e.clientX - (wRect?.left ?? 0)
-                const ty    = e.clientY - (wRect?.top  ?? 0)
+                const tx = e.clientX - (wRect?.left ?? 0)
+                const ty = e.clientY - (wRect?.top ?? 0)
                 setTooltip({ visible: true, x: tx, y: ty, date: day.date, count: day.count })
                 return
             }
@@ -566,17 +599,17 @@ function GitHubContributionSnake({ username, lang }: { username: string; lang: L
 
     const labels = {
         pt: {
-            d30:         'commits nos últimos 30 dias',
-            yr:          'commits no último ano',
-            noCommits:   'Nenhum commit em',
-            oneCommit:   'commit em',
+            d30: 'commits nos últimos 30 dias',
+            yr: 'commits no último ano',
+            noCommits: 'Nenhum commit em',
+            oneCommit: 'commit em',
             manyCommits: 'commits em',
         },
         en: {
-            d30:         'commits in the last 30 days',
-            yr:          'commits in the last year',
-            noCommits:   'No commits on',
-            oneCommit:   'commit on',
+            d30: 'commits in the last 30 days',
+            yr: 'commits in the last year',
+            noCommits: 'No commits on',
+            oneCommit: 'commit on',
             manyCommits: 'commits on',
         },
     }[lang]
@@ -589,11 +622,11 @@ function GitHubContributionSnake({ username, lang }: { username: string; lang: L
         <div
             ref={wrapperRef}
             style={{
-                width:        '100%',
-                marginTop:    '28px',
+                width: '100%',
+                marginTop: '28px',
                 marginBottom: '4px',
-                animation:    'fadeUp 0.7s ease 0.5s both',
-                position:     'relative',
+                animation: 'fadeUp 0.7s ease 0.5s both',
+                position: 'relative',
             }}
         >
             {/* Grid */}
@@ -605,10 +638,10 @@ function GitHubContributionSnake({ username, lang }: { username: string; lang: L
                     onMouseMove={handleMouseMove}
                     onMouseLeave={handleMouseLeave}
                     style={{
-                        display:      'block',
-                        margin:       '0 auto',
+                        display: 'block',
+                        margin: '0 auto',
                         borderRadius: '6px',
-                        cursor:       'crosshair',
+                        cursor: 'crosshair',
                     }}
                 />
             </div>
@@ -617,48 +650,48 @@ function GitHubContributionSnake({ username, lang }: { username: string; lang: L
             {tooltip.visible && tooltip.date && (
                 <div
                     style={{
-                        position:       'absolute',
-                        left:            tooltip.x,
-                        top:             tooltip.y - 48,
-                        transform:      'translateX(-50%)',
-                        pointerEvents:  'none',
-                        zIndex:          50,
-                        background:     'rgba(15,23,42,0.96)',
-                        border:         '1px solid rgba(255,255,255,0.10)',
-                        borderRadius:   '8px',
-                        padding:        '6px 12px',
-                        whiteSpace:     'nowrap',
+                        position: 'absolute',
+                        left: tooltip.x,
+                        top: tooltip.y - 48,
+                        transform: 'translateX(-50%)',
+                        pointerEvents: 'none',
+                        zIndex: 50,
+                        background: 'rgba(15,23,42,0.96)',
+                        border: '1px solid rgba(255,255,255,0.10)',
+                        borderRadius: '8px',
+                        padding: '6px 12px',
+                        whiteSpace: 'nowrap',
                         backdropFilter: 'blur(12px)',
-                        boxShadow:      '0 4px 20px rgba(0,0,0,0.45)',
-                        fontSize:       '12px',
-                        color:          '#cbd5e1',
-                        fontFamily:     "'DM Sans', sans-serif",
-                        lineHeight:      1.4,
+                        boxShadow: '0 4px 20px rgba(0,0,0,0.45)',
+                        fontSize: '12px',
+                        color: '#cbd5e1',
+                        fontFamily: "'DM Sans', sans-serif",
+                        lineHeight: 1.4,
                     }}
                 >
                     <span style={{
-                        display:       'inline-block',
-                        width:          '7px',
-                        height:         '7px',
-                        borderRadius:  '50%',
-                        background:    tooltip.count > 0 ? '#6366f1' : 'rgba(255,255,255,0.15)',
-                        marginRight:   '6px',
+                        display: 'inline-block',
+                        width: '7px',
+                        height: '7px',
+                        borderRadius: '50%',
+                        background: tooltip.count > 0 ? '#6366f1' : 'rgba(255,255,255,0.15)',
+                        marginRight: '6px',
                         verticalAlign: 'middle',
-                        boxShadow:     tooltip.count > 0 ? '0 0 6px rgba(99,102,241,0.6)' : 'none',
+                        boxShadow: tooltip.count > 0 ? '0 0 6px rgba(99,102,241,0.6)' : 'none',
                     }} />
                     <span style={{ color: tooltip.count > 0 ? '#f1f5f9' : '#64748b' }}>
                         {tooltipText}
                     </span>
                     <div style={{
-                        position:    'absolute',
-                        bottom:      '-5px',
-                        left:        '50%',
-                        transform:   'translateX(-50%) rotate(45deg)',
-                        width:        '8px',
-                        height:       '8px',
-                        background:  'rgba(15,23,42,0.96)',
+                        position: 'absolute',
+                        bottom: '-5px',
+                        left: '50%',
+                        transform: 'translateX(-50%) rotate(45deg)',
+                        width: '8px',
+                        height: '8px',
+                        background: 'rgba(15,23,42,0.96)',
                         borderRight: '1px solid rgba(255,255,255,0.10)',
-                        borderBottom:'1px solid rgba(255,255,255,0.10)',
+                        borderBottom: '1px solid rgba(255,255,255,0.10)',
                     }} />
                 </div>
             )}
@@ -666,15 +699,15 @@ function GitHubContributionSnake({ username, lang }: { username: string; lang: L
             {/* Stats */}
             {stats && (
                 <div style={{
-                    display:        'flex',
-                    gap:            '20px',
+                    display: 'flex',
+                    gap: '20px',
                     justifyContent: 'center',
-                    marginTop:      '10px',
-                    flexWrap:       'wrap',
+                    marginTop: '10px',
+                    flexWrap: 'wrap',
                 }}>
                     {[
-                        { value: stats.last30,   label: labels.d30 },
-                        { value: stats.lastYear, label: labels.yr  },
+                        { value: stats.last30, label: labels.d30 },
+                        { value: stats.lastYear, label: labels.yr },
                     ].map(({ value, label }) => (
                         <span key={label} style={{ color: '#64748b', fontSize: '12px' }}>
                             <span style={{ color: '#e2e8f0', fontWeight: 700, fontSize: '13px' }}>
@@ -695,6 +728,7 @@ export function Home() {
     const [github, setGithub] = useState<GitHubProfile | null>(null)
     const [imgError, setImgError] = useState(false)
     const { lang, toggle: toggleLang } = useLang()
+    const [activeSkillFilter, setActiveSkillFilter] = useState<'all' | keyof typeof SKILLS>('all')
 
     const t = T[lang]
 
@@ -772,7 +806,7 @@ export function Home() {
                         {/* Location */}
                         <div style={{ display: 'flex', alignItems: 'center', gap: '5px', animation: 'fadeUp 0.7s ease 0.45s both' }}>
                             <MapPinIcon size={14} style={{ color: '#64748b' }} />
-                            <span style={{ color: '#64748b', fontSize: '14px' }}>{t.location}</span>                            
+                            <span style={{ color: '#64748b', fontSize: '14px' }}>{t.location}</span>
                         </div>
                         <GitHubContributionSnake username={GITHUB_USERNAME} lang={lang} />
 
@@ -874,31 +908,90 @@ export function Home() {
                     {/* ── Skills ── */}
                     <Section id="skills" title={t.skills}>
                         <RevealSection>
-                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                                {SKILLS.map((skill, i) => (
-                                    <span key={skill} style={{
-                                        color: '#cbd5e1', background: 'rgba(255,255,255,0.05)',
-                                        border: '1px solid rgba(255,255,255,0.09)',
-                                        borderRadius: '8px', padding: '6px 14px',
-                                        fontSize: '13px', fontWeight: 500,
-                                        animation: `skillPop 0.4s ease ${i * 40}ms both`,
-                                        cursor: 'default',
-                                        transition: 'background 0.2s, border-color 0.2s, color 0.2s',
-                                    }}
-                                        onMouseEnter={e => {
-                                            (e.currentTarget as HTMLSpanElement).style.background = 'rgba(99,102,241,0.15)'
-                                            ;(e.currentTarget as HTMLSpanElement).style.borderColor = 'rgba(99,102,241,0.4)'
-                                            ;(e.currentTarget as HTMLSpanElement).style.color = '#fff'
-                                        }}
-                                        onMouseLeave={e => {
-                                            (e.currentTarget as HTMLSpanElement).style.background = 'rgba(255,255,255,0.05)'
-                                            ;(e.currentTarget as HTMLSpanElement).style.borderColor = 'rgba(255,255,255,0.09)'
-                                            ;(e.currentTarget as HTMLSpanElement).style.color = '#cbd5e1'
-                                        }}
-                                    >
-                                        {skill}
-                                    </span>
-                                ))}
+                            {/* Filter tabs */}
+                            <div style={{
+                                display: 'flex', gap: '8px', flexWrap: 'wrap',
+                                justifyContent: 'center', marginBottom: '32px',
+                            }}>
+                                {(['all', 'frontend', 'backend', 'database', 'tools'] as const).map(cat => {
+                                    const isActive = activeSkillFilter === cat
+                                    return (
+                                        <button
+                                            key={cat}
+                                            className="filter-btn"
+                                            onClick={() => setActiveSkillFilter(cat)}
+                                            style={{
+                                                padding: '7px 18px', borderRadius: '99px', cursor: 'pointer',
+                                                fontSize: '13px', fontWeight: 600, border: '1px solid',
+                                                borderColor: isActive ? 'transparent' : 'rgba(255,255,255,0.1)',
+                                                background: isActive
+                                                    ? 'linear-gradient(135deg, #6366f1, #8b5cf6)'
+                                                    : 'rgba(255,255,255,0.04)',
+                                                color: isActive ? '#fff' : '#94a3b8',
+                                                boxShadow: isActive ? '0 0 18px rgba(99,102,241,0.35)' : 'none',
+                                            }}
+                                        >
+                                            {t.skillCategories[cat]}
+                                        </button>
+                                    )
+                                })}
+                            </div>
+
+                            {/* Cards grid */}
+                            <div style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))',
+                                gap: '12px',
+                            }}>
+                                {(Object.entries(SKILLS) as [keyof typeof SKILLS, typeof SKILLS.frontend][])
+                                    .filter(([cat]) => activeSkillFilter === 'all' || cat === activeSkillFilter)
+                                    .flatMap(([, items]) => items)
+                                    .map((skill, i) => (
+                                        <div
+                                            key={skill.name}
+                                            className="skill-card"
+                                            style={{
+                                                display: 'flex', flexDirection: 'column',
+                                                alignItems: 'center', justifyContent: 'center',
+                                                gap: '12px', padding: '22px 12px',
+                                                background: 'rgba(255,255,255,0.03)',
+                                                border: '1px solid rgba(255,255,255,0.07)',
+                                                borderRadius: '16px', cursor: 'default',
+                                                animation: `cardPop 0.35s ease ${i * 40}ms both`,
+                                            }}
+                                        >
+                                            {skill.icon ? (
+                                                <img
+                                                    src={skill.icon}
+                                                    alt={skill.name}
+                                                    width={42}
+                                                    height={42}
+                                                    style={{
+                                                        objectFit: 'contain',
+                                                        filter: skill.name === 'Express.js' ? 'invert(1) opacity(0.85)' : 'none',
+                                                        flexShrink: 0,
+                                                    }}
+                                                />
+                                            ) : (
+                                                <div style={{
+                                                    width: '42px', height: '42px', borderRadius: '10px',
+                                                    background: 'rgba(99,102,241,0.2)',
+                                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                    fontSize: '18px', fontWeight: 800, color: '#a5b4fc',
+                                                }}>
+                                                    {skill.name[0]}
+                                                </div>
+                                            )}
+                                            <span style={{
+                                                color: '#94a3b8', fontSize: '12px',
+                                                fontWeight: 500, textAlign: 'center',
+                                                lineHeight: 1.3,
+                                            }}>
+                                                {skill.name}
+                                            </span>
+                                        </div>
+                                    ))
+                                }
                             </div>
                         </RevealSection>
                     </Section>

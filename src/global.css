@@ -14,3 +14,24 @@ html, body, #root {
     background: #0a0f1e;
     overflow-x: hidden;
 }
+
+@keyframes cardPop {
+    from { opacity: 0; transform: scale(0.88) translateY(10px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.skill-card {
+    transition: border-color 0.22s, box-shadow 0.22s, transform 0.22s, background 0.22s;
+}
+.skill-card:hover {
+    border-color: rgba(99,102,241,0.45) !important;
+    box-shadow: 0 0 28px rgba(99,102,241,0.12), 0 4px 16px rgba(0,0,0,0.3);
+    transform: translateY(-4px) scale(1.03);
+    background: rgba(99,102,241,0.08) !important;
+}
+.filter-btn {
+    transition: all 0.2s;
+}
+.filter-btn:hover {
+    border-color: rgba(99,102,241,0.5) !important;
+    color: #fff !important;
+}
