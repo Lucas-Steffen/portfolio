@@ -246,7 +246,7 @@ const SKILLS = {
     database: [
         { name: 'PostgreSQL', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg', level: 7 },
         { name: 'MySQL', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg', level: 5 },
-        { name: 'Firebird', icon: null, level: 7 },
+        { name: 'Firebird', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebird/firebird-original.svg', level: 7 },
     ],
     tools: [
         { name: 'Docker', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg', level: 6 },
