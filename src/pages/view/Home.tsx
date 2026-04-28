@@ -241,7 +241,7 @@ const SKILLS = {
     backend: [
         { name: 'Node.js', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg', level: 7 },
         { name: 'NestJS', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nestjs/nestjs-original.svg', level: 7 },
-        { name: 'TypeORM', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/azuresqldatabase/azuresqldatabase-original.svg', level: 6 },
+        { name: 'TypeORM', icon: 'https://typeorm.io/img/typeorm-icon-colored.png', level: 6 },
         { name: 'Express.js', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg', level: 5 },
     ],
     database: [
@@ -252,7 +252,7 @@ const SKILLS = {
     tools: [
         { name: 'Git', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg', level: 8 },
         { name: 'Docker', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg', level: 6 },
-        { name: 'n8n', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/n8n/n8n-original.svg', level: 6 },
+        { name: 'n8n', icon: 'https://devicons.railway.com/i/n8n.svg', level: 6 },
         { name: 'Grafana', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/grafana/grafana-original.svg', level: 3 },
         { name: 'Jest', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/jest/jest-plain.svg', level: 4 },
         { name: 'Agile/Kanban', icon: null, level: 5 },
