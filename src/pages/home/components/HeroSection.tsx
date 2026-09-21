@@ -38,8 +38,19 @@ export function HeroSection({ lang, copy, profile }: HeroSectionProps) {
         <div className="proof-grid">{copy.proof.map(item => <div key={item.label} className="proof-item"><strong>{item.value}</strong><span>{item.label}</span></div>)}</div>
 
         <div className="backend-console" aria-label={copy.architecturePanel.ariaLabel}>
-            <div className="console-bar"><span /><span /><span /><code>{copy.architecturePanel.file}</code></div>
+            <div className="console-bar"><span /><span /><span /><code>lucas@backend: ~/portfolio</code><b>docker compose ps</b></div>
             <div className="console-body">
+                <div className="runtime-panel">
+                    <div className="terminal-command"><span>$</span> docker compose up -d <i>--build</i></div>
+                    <div className="container-list">
+                        <div className="container-head"><span>CONTAINER</span><span>IMAGE</span><span>STATUS</span><span>PORT</span></div>
+                        <div><strong>portfolio-api</strong><code>node:22-alpine</code><em><i />healthy</em><small>:3000</small></div>
+                        <div><strong>portfolio-worker</strong><code>nestjs/worker</code><em><i />running</em><small>internal</small></div>
+                        <div><strong>portfolio-db</strong><code>postgres:17</code><em><i />healthy</em><small>:5432</small></div>
+                        <div><strong>portfolio-cache</strong><code>redis:7-alpine</code><em><i />healthy</em><small>:6379</small></div>
+                    </div>
+                </div>
+                <div className="topology-label"><span>{copy.architecturePanel.file}</span><code>4 services · 1 network · 0 failures</code></div>
                 <div className="request-flow">
                     <div><small>{copy.architecturePanel.request}</small><strong>REST API</strong><code>{copy.architecturePanel.endpoint}</code></div>
                     <i>→</i>
