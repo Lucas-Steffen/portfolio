@@ -20,9 +20,9 @@ export function DefaultLayout() {
 				style={{
 					paddingTop: "80px",
 					width: "100%",
-					maxWidth: "1280px",
+					maxWidth: "1440px",
 					margin: "0 auto",
-					padding: "80px 16px 32px",
+					padding: "80px clamp(8px, 1.5vw, 20px) 32px",
 					boxSizing: "border-box",
 				}}
 			>

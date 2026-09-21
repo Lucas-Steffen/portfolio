@@ -1,8 +1,68 @@
-/* eslint-disable @typescript-eslint/no-explicit-any -- translation data is a runtime-selected union */
-import { useEffect,useState } from 'react'
-import { EnvelopeIcon,GithubLogoIcon,LinkedinLogoIcon,MapPinIcon } from '@phosphor-icons/react'
-import { GITHUB_USERNAME } from '../data'
-import type { GitHubProfile,Lang } from '../types'
+import { ArrowDownIcon, GithubLogoIcon, LinkedinLogoIcon, MapPinIcon } from '@phosphor-icons/react'
+import { GITHUB_USERNAME, type PortfolioCopy } from '../data'
+import type { GitHubProfile, Lang } from '../types'
 import { GitHubContributionSnake } from './GitHubContributionSnake'
-function Typed({values}:{values:string[]}){const [text,setText]=useState(''),[index,setIndex]=useState(0),[erase,setErase]=useState(false);useEffect(()=>{const target=values[index];const timer=setTimeout(()=>{if(!erase&&text===target)return setErase(true);if(erase&&!text){setErase(false);setIndex(i=>(i+1)%values.length);return}setText(erase?text.slice(0,-1):target.slice(0,text.length+1))},!erase&&text===target?1800:erase?28:55);return()=>clearTimeout(timer)},[erase,index,text,values]);return <span style={{fontFamily:'var(--mono)',color:'var(--text)'}}>{text}<i style={{display:'inline-block',width:8,height:16,marginLeft:6,background:'var(--green)',animation:'cursor 1s step-end infinite'}}/></span>}
-export function HeroSection({lang,copy,profile}:{lang:Lang;copy:any;profile:GitHubProfile|null}){const [failed,setFailed]=useState(false);const avatar=!failed&&profile?.avatar_url?profile.avatar_url:'https://ui-avatars.com/api/?name=Lucas+Steffen&background=0d1117&color=34d399&size=200';const social=[{label:lang==='pt'?'E-mail':'Email',icon:EnvelopeIcon,href:'mailto:lucasgabriel.programador@gmail.com'},{label:'LinkedIn',icon:LinkedinLogoIcon,href:'https://linkedin.com/in/lucasteffen'},{label:'GitHub',icon:GithubLogoIcon,href:`https://github.com/${GITHUB_USERNAME}`}];return <div id="hero" style={{display:'flex',flexDirection:'column',alignItems:'center',textAlign:'center',padding:'72px 0 80px'}}><div style={{width:104,height:104,borderRadius:'50%',padding:2,marginBottom:16,background:'linear-gradient(135deg,rgba(52,211,153,.6),rgba(56,189,248,.3))'}}><img src={avatar} onError={()=>setFailed(true)} alt="Lucas Steffen" style={{width:'100%',height:'100%',borderRadius:'50%',objectFit:'cover',border:'2px solid var(--bg)'}}/></div><div style={{marginBottom:16}}><Typed values={lang==='pt'?['Olá...','me chamo Lucas.','Seja bem-vindo.']:['Hello...',"I'm Lucas.",'Welcome.']}/></div>{profile&&<div style={{display:'flex',gap:6,marginBottom:20}}>{[[copy.repos,profile.public_repos],[copy.followers,profile.followers],[copy.following,profile.following]].map(([label,value])=><span key={label} className="tag">{value} {label}</span>)}</div>}<h1 style={{color:'var(--text)',fontSize:'clamp(28px,5.5vw,46px)',marginBottom:16}}>Lucas G. Amorim Steffen</h1><div style={{marginBottom:12}}><span style={{color:'var(--green)'}}>$ </span><Typed values={copy.roles}/></div><div style={{display:'flex',gap:5,color:'var(--text-dim)',fontFamily:'var(--mono)',fontSize:11}}><MapPinIcon size={12}/>{copy.location}</div><GitHubContributionSnake username={GITHUB_USERNAME} lang={lang}/><div style={{display:'flex',gap:8,flexWrap:'wrap',justifyContent:'center'}}>{social.map(({label,icon:Icon,href})=><a key={label} href={href} target="_blank" rel="noreferrer" className="social-btn"><Icon size={14}/>{label}</a>)}</div></div>}
+
+interface HeroSectionProps { lang: Lang; copy: PortfolioCopy; profile: GitHubProfile | null }
+
+function scrollToWork() { document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' }) }
+
+export function HeroSection({ lang, copy, profile }: HeroSectionProps) {
+    const stats = profile ? [
+        { label: copy.repos, value: profile.public_repos },
+        { label: copy.followers, value: profile.followers },
+        { label: copy.following, value: profile.following },
+    ] : []
+
+    return <section id="hero" className="hero">
+        <div className="hero-main">
+            <div className="hero-copy">
+                <p className="hero-eyebrow">{copy.eyebrow}</p>
+                <p className="hero-name">Lucas G. Amorim Steffen</p>
+                <h1>{copy.headline}</h1>
+                <p className="hero-intro">{copy.intro}</p>
+
+                <div className="hero-actions">
+                    <button className="button button-primary" onClick={scrollToWork}>{copy.primaryCta}<ArrowDownIcon size={16} /></button>
+                </div>
+
+                <div className="hero-meta"><span><MapPinIcon size={14} />{copy.location}</span><span>github.com/{GITHUB_USERNAME}</span></div>
+            </div>
+            <div className="hero-portrait">
+                <div className="portrait-label"><span>01</span><strong>{copy.portraitRole.split('\n').map((line, index) => <span key={line}>{index > 0 && <br />}{line}</span>)}</strong></div>
+                <img src="/lucas-hoodie.png" alt="Lucas G. Amorim Steffen" />
+                <div className="portrait-stack">NESTJS<br />POSTGRESQL<br />REDIS</div>
+            </div>
+        </div>
+
+        <div className="proof-grid">{copy.proof.map(item => <div key={item.label} className="proof-item"><strong>{item.value}</strong><span>{item.label}</span></div>)}</div>
+
+        <div className="backend-console" aria-label={copy.architecturePanel.ariaLabel}>
+            <div className="console-bar"><span /><span /><span /><code>{copy.architecturePanel.file}</code></div>
+            <div className="console-body">
+                <div className="request-flow">
+                    <div><small>{copy.architecturePanel.request}</small><strong>REST API</strong><code>{copy.architecturePanel.endpoint}</code></div>
+                    <i>→</i>
+                    <div><small>{copy.architecturePanel.application}</small><strong>NestJS</strong><code>{copy.architecturePanel.appDetail}</code></div>
+                    <i>→</i>
+                    <div><small>{copy.architecturePanel.async}</small><strong>BullMQ</strong><code>{copy.architecturePanel.asyncDetail}</code></div>
+                    <i>→</i>
+                    <div><small>{copy.architecturePanel.data}</small><strong>PostgreSQL</strong><code>{copy.architecturePanel.dataDetail}</code></div>
+                </div>
+                <div className="console-log">
+                    <span><b>{copy.architecturePanel.info}</b> {copy.architecturePanel.requestDone} <em>201</em></span>
+                    <span><b>{copy.architecturePanel.queue}</b> {copy.architecturePanel.jobSent} <em>{copy.architecturePanel.waiting}</em></span>
+                    <span><b>{copy.architecturePanel.auth}</b> {copy.architecturePanel.permissionChecked} <em>{copy.architecturePanel.allowed}</em></span>
+                </div>
+            </div>
+        </div>
+
+        <GitHubContributionSnake username={GITHUB_USERNAME} lang={lang} />
+
+        <div className="hero-links">
+            <a href={copy.github} target="_blank" rel="noreferrer"><GithubLogoIcon size={16} />GitHub</a>
+            <a href={copy.linkedin} target="_blank" rel="noreferrer"><LinkedinLogoIcon size={16} />LinkedIn</a>
+            {stats.map(item => <span key={item.label}><strong>{item.value}</strong> {item.label}</span>)}
+        </div>
+    </section>
+}

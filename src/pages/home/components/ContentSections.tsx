@@ -1,14 +1,48 @@
-/* eslint-disable @typescript-eslint/no-explicit-any -- translation data is a runtime-selected union */
 import { useState } from 'react'
-import { ArrowSquareOutIcon,CalendarIcon,TerminalIcon } from '@phosphor-icons/react'
-import { SKILLS } from '../data'
-import type { SkillCategory } from '../types'
-import { Reveal,Section } from './PagePrimitives'
-const stack={display:'flex',flexDirection:'column',gap:'12px'} as const
-const tags=(items:string[])=><div style={{display:'flex',gap:6,flexWrap:'wrap'}}>{items.map(x=><span key={x} className="tag">{x}</span>)}</div>
-export function AboutSection({copy}:{copy:any}){return <Section id="about" title={copy.about}><Reveal><div className="card" style={{padding:'24px 28px'}}><div style={{fontFamily:'var(--mono)',fontSize:11,color:'var(--text-dim)',marginBottom:14}}><TerminalIcon size={12}/> cat <span style={{color:'var(--cyan)'}}>README.md</span></div><p style={{color:'var(--text-muted)',lineHeight:1.85,fontSize:14.5}}>{copy.aboutText}</p></div></Reveal></Section>}
-export function ExperienceSection({copy}:{copy:any}){return <Section id="experience" title={copy.experience}><div style={stack}>{copy.experience_items.map((x:any,i:number)=><Reveal key={x.role+x.company} delay={i*70}><article className="card" style={{padding:'20px 24px'}}><div style={{display:'flex',justifyContent:'space-between',flexWrap:'wrap',marginBottom:10}}><div><h3 style={{color:'var(--text)',fontSize:14}}>{x.role} {x.current&&<span className="tag">{copy.present}</span>}</h3><span style={{fontFamily:'var(--mono)',color:'var(--cyan)',fontSize:12}}>{x.company} · {x.location}</span></div>{x.period&&<span style={{color:'var(--text-dim)',fontSize:10}}><CalendarIcon size={11}/> {x.period}</span>}</div><p style={{color:'var(--text-muted)',fontSize:13.5,lineHeight:1.75,marginBottom:12}}>{x.description}</p>{tags(x.tags)}</article></Reveal>)}</div></Section>}
-export function ProjectsSection({copy}:{copy:any}){return <Section id="projects" title={`${copy.projects} (${copy.projects_items.length})`}><div style={stack}>{copy.projects_items.map((x:any,i:number)=><Reveal key={x.title} delay={i*70}><article className="card" style={{padding:'20px 24px'}}><div style={{display:'flex',justifyContent:'space-between',marginBottom:10}}><div><h3 style={{color:'var(--text)',fontSize:14}}>{x.title}</h3><small style={{color:'var(--text-dim)'}}>{x.type} · {x.date}</small></div><a href={x.url} target="_blank" rel="noreferrer" style={{color:x.statusColor,textDecoration:'none',fontSize:11}}><ArrowSquareOutIcon size={12}/> {copy.website}</a></div><p style={{color:'var(--text-muted)',fontSize:13.5,lineHeight:1.75,marginBottom:14}}>{x.description}</p>{tags(x.tags)}</article></Reveal>)}</div></Section>}
-export function EducationSection({copy}:{copy:any}){return <Section id="education" title={copy.education}><div style={stack}>{copy.education_items.map((x:any)=><Reveal key={x.institution}><article className="card" style={{padding:'20px 24px'}}><h3 style={{color:'var(--text)',fontSize:14}}>{x.institution} <small style={{color:'var(--text-dim)'}}>{x.period}</small></h3><p style={{color:'var(--cyan)',fontSize:12}}>{x.degree}</p><small style={{color:'var(--text-dim)'}}>{x.detail}</small></article></Reveal>)}</div></Section>}
-export function SkillsSection({copy}:{copy:any}){const [filter,setFilter]=useState<SkillCategory>('all');const cats:SkillCategory[]=['all','frontend','backend','database','tools'];const skills=Object.entries(SKILLS).filter(([c])=>filter==='all'||c===filter).flatMap(([,x])=>x);return <Section id="skills" title={copy.skills}><Reveal><div style={{display:'flex',gap:6,marginBottom:24}}>{cats.map(c=><button key={c} className={`filter-btn${filter===c?' active':''}`} onClick={()=>setFilter(c)}>{copy.skillCategories[c]}</button>)}</div><div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(100px,1fr))',gap:10}}>{skills.map(x=><div key={x.name} className="skill-card"><div style={{height:36}}>{x.icon?<img src={x.icon} alt="" width={36} height={36}/>:x.name[0]}</div><span style={{color:'var(--text-muted)',fontSize:10}}>{x.name}</span><span style={{color:x.level<=4?'#f59e0b':x.level===5?'#38bdf8':'#34d399',fontSize:10}}>{x.level}/10</span></div>)}</div></Reveal></Section>}
-export function BlogSection({copy}:{copy:any}){if(!copy.blog_items.length)return null;return <Section id="blog" title={copy.blog}>{copy.blog_items.map((x:any)=><article key={x.title} className="card" style={{padding:20}}>{x.title}</article>)}</Section>}
+import { ArrowUpRightIcon, CheckCircleIcon, CodeIcon, DatabaseIcon, GithubLogoIcon, GitBranchIcon, InstagramLogoIcon, LinkedinLogoIcon, ShieldCheckIcon, TerminalIcon } from '@phosphor-icons/react'
+import { STACK, type PortfolioCopy } from '../data'
+import { Reveal, Section } from './PagePrimitives'
+
+const principleIcons = [CodeIcon, DatabaseIcon, TerminalIcon]
+
+export function AboutSection({ copy }: { copy: PortfolioCopy }) {
+    return <Section id="about" title={copy.about}>
+        <Reveal><div className="about-layout"><div><p className="section-kicker">{copy.aboutLead}</p><p className="body-copy">{copy.aboutText}</p></div><div className="principles">{copy.principles.map((item, index) => { const Icon = principleIcons[index]; return <article key={item.code} className="principle"><span>{item.code}</span><Icon size={22} /><h3>{item.title}</h3><p>{item.text}</p></article> })}</div></div></Reveal>
+    </Section>
+}
+
+export function ExperienceSection({ copy }: { copy: PortfolioCopy }) {
+    return <Section id="experience" title={copy.experience}><div className="timeline">{copy.experience_items.map((item, index) => <Reveal key={`${item.company}-${item.role}`} delay={index * 70}><article className="timeline-item"><div className="timeline-marker"/><div className="timeline-heading"><div><p className="overline">{item.company} · {item.location}</p><h3>{item.role}</h3></div><span>{item.current ? copy.present : item.period}</span></div><p className="body-copy">{item.description}</p><ul className="highlight-list">{item.highlights.map(highlight => <li key={highlight}><CheckCircleIcon size={15} />{highlight}</li>)}</ul><div className="tag-list">{item.tags.map(tag => <span key={tag} className="tag">{tag}</span>)}</div></article></Reveal>)}</div></Section>
+}
+
+export function WorkSection({ copy }: { copy: PortfolioCopy }) {
+    return <Section id="work" title={copy.work}><p className="section-intro">{copy.workIntro}</p><div className="work-grid">{copy.work_items.map((item, index) => <Reveal key={item.index} delay={index * 60}><article className="work-card"><div className="work-index">{item.index}<span>{item.kind}</span></div><h3>{item.title}</h3><p>{item.description}</p><div className="architecture"><GitBranchIcon size={15} />{item.architecture.map(technology => <span key={technology}>{technology}</span>)}</div><div className="outcome"><ShieldCheckIcon size={17} /><span>{item.outcome}</span></div></article></Reveal>)}</div></Section>
+}
+
+export function ProjectsSection({ copy }: { copy: PortfolioCopy }) {
+    return <Section id="projects" title={copy.publicProjects}><div className="project-grid">{copy.projects_items.map(project => <Reveal key={project.title}><article className="project-card"><div className="project-top"><div><p className="overline">{project.type} · {project.date}</p><h3>{project.title}</h3></div><span className="live-status"><i />{project.status}</span></div><p>{project.description}</p><div className="project-footer"><div className="tag-list">{project.tags.map(tag => <span key={tag} className="tag">{tag}</span>)}</div><a href={project.url} target="_blank" rel="noreferrer" aria-label={`${copy.primaryCta}: ${project.title}`}><ArrowUpRightIcon size={18} /></a></div></article></Reveal>)}</div></Section>
+}
+
+export function SkillsSection({ copy }: { copy: PortfolioCopy }) {
+    const groups = Object.keys(copy.stackGroups) as Array<keyof typeof copy.stackGroups>
+    const [active, setActive] = useState<(typeof groups)[number]>('all')
+    const visible = STACK.filter(item => active === 'all' || item.group === active)
+    return <Section id="skills" title={copy.skills}><p className="section-intro">{copy.stackIntro}</p><Reveal><div className="filter-row">{groups.map(group => <button key={group} className={`filter-btn${active === group ? ' active' : ''}`} onClick={() => setActive(group)}>{copy.stackGroups[group]}</button>)}</div><div className="stack-cloud">{visible.map(item => <div key={item.name} className="stack-chip"><div className="stack-icon"><b>{item.name.slice(0, 2).toUpperCase()}</b><img src={item.icon} alt="" loading="lazy" onError={event => { event.currentTarget.style.display = 'none'; const fallback = event.currentTarget.previousElementSibling as HTMLElement | null; if (fallback) fallback.style.display = 'block' }} /></div><div className="stack-content"><div className="stack-heading"><span>{item.name}</span><strong>{item.level}<small>/10</small></strong></div><small>{copy.stackGroups[item.group]}</small><div className="skill-meter" aria-label={`${item.name}: ${item.level} ${copy.skillLevelLabel}`}><i style={{ width: `${item.level * 10}%` }} /></div></div></div>)}</div></Reveal></Section>
+}
+
+export function EducationSection({ copy }: { copy: PortfolioCopy }) {
+    return <Section id="education" title={copy.education}>{copy.education_items.map(item => <Reveal key={item.institution}><article className="education-card"><div><p className="overline">{item.period}</p><h3>{item.degree}</h3><p>{item.institution}</p></div><span>{item.detail}</span></article></Reveal>)}</Section>
+}
+
+export function SocialSection({ copy }: { copy: PortfolioCopy }) {
+    const links = [
+        { name: 'LinkedIn', url: copy.linkedin, icon: LinkedinLogoIcon },
+        { name: 'Instagram', url: copy.instagram, icon: InstagramLogoIcon },
+        { name: 'GitHub', url: copy.github, icon: GithubLogoIcon },
+    ]
+
+    return <Reveal><section className="contact-card" aria-labelledby="social-title">
+        <div className="contact-copy"><p className="overline">// {copy.socialLabel}</p><h2 id="social-title">{copy.socialTitle}</h2><p>{copy.socialText}</p></div>
+        <div className="social-cta-list">{links.map(({ name, url, icon: Icon }) => <a key={name} href={url} target="_blank" rel="noreferrer"><Icon size={21} weight="duotone"/><span><small>{copy.socialFollow}</small>{name}</span><ArrowUpRightIcon size={16}/></a>)}</div>
+    </section></Reveal>
+}

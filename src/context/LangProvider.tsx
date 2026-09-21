@@ -13,7 +13,7 @@ export function LangProvider({ children }: { children: ReactNode }) {
     const [lang, setLang] = useState<Lang>(() => {
         const stored = localStorage.getItem('portfolio-lang') as Lang | null
         if (stored === 'pt' || stored === 'en') return stored
-        return navigator.language.startsWith('en') ? 'pt' : 'en'
+        return navigator.language.startsWith('en') ? 'en' : 'pt'
     })
 
     const toggle = () => {

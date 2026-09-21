@@ -150,8 +150,8 @@ export function GitHubContributionSnake({ username, lang }: { username: string; 
     const handleMouseLeave = useCallback(() => setTooltip(prev => ({ ...prev, visible: false })), [])
 
     const labels = lang === 'pt'
-        ? { d30: 'commits · 30 dias', yr: 'commits · 1 ano', noCommits: 'sem commits em', oneCommit: 'commit em', many: 'commits em' }
-        : { d30: 'commits · 30 days', yr: 'commits · 1 year', noCommits: 'no commits on', oneCommit: 'commit on', many: 'commits on' }
+        ? { title: 'contribuições no GitHub', d30: 'commits · 30 dias', yr: 'commits · 1 ano', noCommits: 'sem commits em', oneCommit: 'commit em', many: 'commits em' }
+        : { title: 'GitHub contributions', d30: 'commits · 30 days', yr: 'commits · 1 year', noCommits: 'no commits on', oneCommit: 'commit on', many: 'commits on' }
 
     const tooltipText = tooltip.count === 0
         ? `${labels.noCommits} ${formatDate(tooltip.date, lang)}`
@@ -178,7 +178,7 @@ export function GitHubContributionSnake({ username, lang }: { username: string; 
                         <div key={c} style={{ width: '10px', height: '10px', borderRadius: '50%', background: c, opacity: 0.8 }} />
                     ))}
                     <span style={{ fontFamily: 'var(--mono)', fontSize: '11px', color: 'var(--text-dim)', marginLeft: '8px', letterSpacing: '0.05em' }}>
-                        github contributions — {GITHUB_USERNAME}
+                        {labels.title} — {GITHUB_USERNAME}
                     </span>
                 </div>
                 <div style={{ padding: '16px', overflowX: 'auto' }}>
@@ -234,4 +234,3 @@ export function GitHubContributionSnake({ username, lang }: { username: string; 
 }
 
 // ─── Home ─────────────────────────────────────────────────────────────────────
-
