@@ -59,7 +59,6 @@ export interface Content {
 		role: string
 		headline: string
 		intro: string
-		chips: string[]
 		ctaCases: string
 		ctaContact: string
 		location: string
@@ -97,7 +96,7 @@ export interface Content {
 	cases: {
 		title: string
 		intro: string
-		labels: { context: string; contribution: string; decisions: string; tradeoffs: string; result: string }
+		labels: { details: string; context: string; contribution: string; decisions: string; tradeoffs: string; result: string }
 		items: CaseStudy[]
 	}
 	experience: { title: string; present: string; items: ExperienceItem[] }

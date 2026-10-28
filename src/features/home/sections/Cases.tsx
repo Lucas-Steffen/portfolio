@@ -8,7 +8,7 @@ export function Cases() {
 	const { labels } = cases
 
 	return (
-		<Section id="cases" index="02" title={cases.title} intro={cases.intro} wide>
+		<Section id="cases" index="01" title={cases.title} intro={cases.intro} wide>
 			<div className="cards-grid cases-grid">
 				{cases.items.map((item, index) => (
 					<Reveal key={item.title} delay={index * 60}>
@@ -18,26 +18,6 @@ export function Cases() {
 							<dl>
 								<dt>{labels.context}</dt>
 								<dd>{item.context}</dd>
-								{item.contribution && (
-									<>
-										<dt>{labels.contribution}</dt>
-										<dd>{item.contribution}</dd>
-									</>
-								)}
-								<dt>{labels.decisions}</dt>
-								<dd>
-									<ul>
-										{item.decisions.map(decision => (
-											<li key={decision}>{decision}</li>
-										))}
-									</ul>
-								</dd>
-								{item.tradeoffs && (
-									<>
-										<dt>{labels.tradeoffs}</dt>
-										<dd>{item.tradeoffs}</dd>
-									</>
-								)}
 								{item.result && (
 									<>
 										<dt>{labels.result}</dt>
@@ -45,6 +25,31 @@ export function Cases() {
 									</>
 								)}
 							</dl>
+							<details className="case-details">
+								<summary>{labels.details}</summary>
+								<dl>
+									{item.contribution && (
+										<>
+											<dt>{labels.contribution}</dt>
+											<dd>{item.contribution}</dd>
+										</>
+									)}
+									<dt>{labels.decisions}</dt>
+									<dd>
+										<ul>
+											{item.decisions.map(decision => (
+												<li key={decision}>{decision}</li>
+											))}
+										</ul>
+									</dd>
+									{item.tradeoffs && (
+										<>
+											<dt>{labels.tradeoffs}</dt>
+											<dd>{item.tradeoffs}</dd>
+										</>
+									)}
+								</dl>
+							</details>
 							<ul className="tag-list">
 								{item.tech.map(tag => (
 									<li key={tag} className="tag">

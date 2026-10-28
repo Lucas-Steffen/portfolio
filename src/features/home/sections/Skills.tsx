@@ -13,7 +13,7 @@ export function Skills() {
 	const visible = skills.groups.filter(group => filter === 'all' || group.id === filter)
 
 	return (
-		<Section id="skills" index="04" title={skills.title} intro={skills.intro}>
+		<Section id="skills" index="02" title={skills.title} intro={skills.intro}>
 			<div className="filter-bar" role="group" aria-label={skills.title}>
 				<button type="button" className="filter-btn" aria-pressed={filter === 'all'} onClick={() => setFilter('all')}>
 					{skills.all}

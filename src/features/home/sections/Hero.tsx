@@ -12,17 +12,9 @@ export function Hero() {
 		<section id="hero" className="hero" aria-labelledby="hero-title">
 			<div className="container hero-grid">
 				<div className="hero-copy">
-					<p className="eyebrow">{hero.role}</p>
 					<h1 id="hero-title">{hero.headline}</h1>
+					<p className="eyebrow hero-role">{hero.role}</p>
 					<p className="hero-intro">{hero.intro}</p>
-
-					<ul className="chip-list" aria-label="Stack principal">
-						{hero.chips.map(chip => (
-							<li key={chip} className="chip">
-								{chip}
-							</li>
-						))}
-					</ul>
 
 					<div className="hero-actions">
 						<a
@@ -46,27 +38,6 @@ export function Hero() {
 							{hero.ctaContact}
 						</a>
 					</div>
-
-					<ul className="social-row" aria-label={hero.socialLabel}>
-						<li>
-							<ExternalLink className="icon-btn" href={links.github} aria-label="GitHub">
-								<GithubLogoIcon size={22} aria-hidden="true" />
-							</ExternalLink>
-						</li>
-						<li>
-							<ExternalLink className="icon-btn" href={links.linkedin} aria-label="LinkedIn">
-								<LinkedinLogoIcon size={22} aria-hidden="true" />
-							</ExternalLink>
-						</li>
-						<li>
-							<ExternalLink className="icon-btn" href={links.instagram} aria-label="Instagram">
-								<InstagramLogoIcon size={22} aria-hidden="true" />
-							</ExternalLink>
-						</li>
-						<li className="hero-location">
-							<MapPinIcon size={16} aria-hidden="true" /> {hero.location}
-						</li>
-					</ul>
 				</div>
 
 				<div className="hero-visual">
@@ -97,6 +68,27 @@ export function Hero() {
 						<span className="photo-label">{hero.photoLabel}</span>
 					</div>
 				</div>
+
+				<ul className="social-row" aria-label={hero.socialLabel}>
+					<li>
+						<ExternalLink className="icon-btn" href={links.github} aria-label="GitHub">
+							<GithubLogoIcon size={22} aria-hidden="true" />
+						</ExternalLink>
+					</li>
+					<li>
+						<ExternalLink className="icon-btn" href={links.linkedin} aria-label="LinkedIn">
+							<LinkedinLogoIcon size={22} aria-hidden="true" />
+						</ExternalLink>
+					</li>
+					<li>
+						<ExternalLink className="icon-btn" href={links.instagram} aria-label="Instagram">
+							<InstagramLogoIcon size={22} aria-hidden="true" />
+						</ExternalLink>
+					</li>
+					<li className="hero-location">
+						<MapPinIcon size={16} aria-hidden="true" /> {hero.location}
+					</li>
+				</ul>
 			</div>
 		</section>
 	)

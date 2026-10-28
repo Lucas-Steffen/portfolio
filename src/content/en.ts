@@ -7,7 +7,7 @@ export const en: Content = {
 			'Backend Software Engineer in Sinop, Brazil. NestJS and Java services, SAP, payment and telematics integrations, BullMQ/Redis queues and PostgreSQL in production.',
 	},
 	nav: {
-		cases: 'Cases',
+		cases: 'Projects',
 		experience: 'Experience',
 		stack: 'Stack',
 		contact: 'Contact',
@@ -23,10 +23,9 @@ export const en: Content = {
 		role: 'Backend Software Engineer',
 		headline: 'Lucas Steffen',
 		intro:
-			'I build APIs, integrations, asynchronous processing and data layers that power real operations, with clear business rules and visible production behavior.',
-		chips: ['NestJS', 'TypeORM', 'PostgreSQL', 'Redis', 'Java'],
-		ctaCases: 'See cases',
-		ctaContact: 'Contact',
+			'I build systems and integrations that automate processes, connect platforms and make business operations more efficient, secure and scalable.',
+		ctaCases: 'See projects',
+		ctaContact: 'Get in touch',
 		location: 'Sinop, MT · Brazil',
 		photoAlt: 'Lucas Steffen, backend software engineer',
 		photoLabel: 'backend / vf par',
@@ -89,6 +88,7 @@ export const en: Content = {
 		title: 'Work cases',
 		intro: 'Kinds of problems I solve day to day, presented without exposing internal code or information.',
 		labels: {
+			details: 'Technical details',
 			context: 'Context',
 			contribution: 'My contribution',
 			decisions: 'Technologies and decisions',

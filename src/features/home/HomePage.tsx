@@ -10,10 +10,10 @@ export function HomePage() {
 	return (
 		<>
 			<Hero />
-			<About />
 			<Cases />
-			<Experience />
 			<Skills />
+			<Experience />
+			<About />
 			<Projects />
 			<Education />
 			<Contact />

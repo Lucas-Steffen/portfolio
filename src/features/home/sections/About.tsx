@@ -20,7 +20,7 @@ export function About() {
 				</ul>
 			</div>
 
-			<Section id="about" index="01" title={about.title}>
+			<Section id="about" index="04" title={about.title}>
 				<div className="about-grid">
 					<Reveal>
 						<div className="about-copy">

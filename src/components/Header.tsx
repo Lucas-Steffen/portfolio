@@ -6,7 +6,7 @@ import { useLang } from '../i18n/LangProvider'
 import { scrollToSection } from '../lib/scroll'
 import { LanguageToggle } from './LanguageToggle'
 
-const NAV_IDS = ['cases', 'experience', 'skills', 'contact'] as const
+const NAV_IDS = ['cases', 'skills', 'experience', 'contact'] as const
 const OBSERVED = ['about', ...NAV_IDS] as const
 
 export function Header() {
