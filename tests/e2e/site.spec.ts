@@ -89,7 +89,7 @@ test.describe('navegação e conteúdo', () => {
 
 	test('diagrama tem rótulo acessível e texto equivalente', async ({ page }) => {
 		await page.goto('/')
-		await expect(page.locator('.arch-board')).toHaveAttribute('role', 'img')
+		await expect(page.locator('.arch-svg')).toHaveAttribute('role', 'img')
 		await expect(page.locator('.arch-flow li')).toHaveCount(6)
 	})
 })

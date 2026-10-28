@@ -26,22 +26,12 @@
 }
 
 .brand-mark {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
+	display: block;
 	flex: none;
 	width: 40px;
 	height: 40px;
 	border: 1px solid var(--line-strong);
 	border-radius: 10px;
-	font-family: var(--font-mono);
-	font-weight: 700;
-	font-size: 0.9rem;
-	background: var(--bg-panel);
-}
-
-.brand-mark span {
-	color: var(--accent);
 }
 
 .brand-copy {
@@ -680,118 +670,118 @@
 	font-size: var(--fs-small);
 }
 
-.arch-board {
-	display: grid;
-	gap: 20px;
+.arch-svg {
+	display: none;
+	width: 100%;
+	height: auto;
 }
 
-.arch-row {
-	display: flex;
-	flex-direction: column;
-	align-items: stretch;
-	gap: 0;
+.arch-rect {
+	fill: var(--bg-panel);
+	stroke: var(--line-strong);
+	stroke-width: 1.5;
 }
 
-.arch-row-branch {
-	flex-direction: column;
-	gap: 16px;
+.arch-rect-main {
+	stroke: var(--accent);
 }
 
-.arch-node {
-	padding: 14px 16px;
-	border: 1.5px solid var(--line-strong);
-	border-radius: 12px;
-	background: var(--bg-panel);
-	text-align: center;
+.arch-text {
+	fill: var(--text);
+	font-size: 17px;
 	font-weight: 700;
-	font-size: var(--fs-small);
 }
 
-.arch-node-main {
-	border-color: var(--accent);
-}
-
-.arch-node-small {
+.arch-text-mono {
 	font-family: var(--font-mono);
 	font-weight: 500;
 }
 
-.arch-link {
+.arch-edge {
 	--c: var(--sync);
-	position: relative;
-	align-self: center;
-	width: 0;
-	height: 44px;
-	border-left: 2px solid var(--c);
-}
-
-.arch-link-grpc {
-	--c: var(--grpc);
-}
-
-.arch-link-async {
-	--c: var(--async);
-	border-left-style: dashed;
-}
-
-.arch-link-label {
-	position: absolute;
-	left: 10px;
-	top: 50%;
-	transform: translateY(-50%);
-	font-family: var(--font-mono);
-	font-size: var(--fs-label);
 	color: var(--c);
 }
 
-.arch-branch {
-	display: flex;
-	flex-direction: column;
-	align-items: stretch;
+.arch-edge path {
+	fill: none;
+	stroke: var(--c);
+	stroke-width: 2;
+	stroke-linejoin: round;
+}
+
+.arch-edge text {
+	fill: var(--c);
+	font-family: var(--font-mono);
+	font-size: 14px;
+	paint-order: stroke;
+	stroke: var(--bg-raised);
+	stroke-width: 5px;
+}
+
+.arch-edge-grpc {
+	--c: var(--grpc);
+}
+
+.arch-edge-async {
+	--c: var(--async);
+}
+
+.arch-edge-async path {
+	stroke-dasharray: 6 5;
+}
+
+.arch-arrow path {
+	fill: var(--sync);
+}
+
+.arch-arrow-grpc path {
+	fill: var(--grpc);
+}
+
+.arch-arrow-async path {
+	fill: var(--async);
+}
+
+.arch-steps {
+	display: grid;
+	gap: 10px;
+	counter-reset: step;
+}
+
+.arch-step {
+	counter-increment: step;
+	padding: 12px 14px 12px 16px;
+	border: 1px solid var(--line-strong);
+	border-left: 4px solid var(--sync);
+	border-radius: 10px;
+	background: var(--bg-panel);
+	font-size: var(--fs-small);
+}
+
+.arch-step-grpc {
+	border-left-color: var(--grpc);
+}
+
+.arch-step-async {
+	border-left-color: var(--async);
+	border-left-style: dashed;
+}
+
+.arch-flow {
+	display: none;
 }
 
 @media (min-width: 880px) {
-	.arch-row {
-		flex-direction: row;
-		align-items: center;
+	.arch-svg {
+		display: block;
 	}
 
-	.arch-row > .arch-node {
-		flex: 1;
+	.arch-steps {
+		display: none;
 	}
 
-	.arch-row > .arch-node-main {
-		flex: 1.2;
-	}
-
-	.arch-link {
-		flex: none;
-		align-self: center;
-		width: clamp(64px, 8vw, 120px);
-		height: 0;
-		border-left: 0;
-		border-top: 2px solid var(--c);
-	}
-
-	.arch-link-async {
-		border-top-style: dashed;
-	}
-
-	.arch-link-label {
-		left: 50%;
-		top: -22px;
-		transform: translateX(-50%);
-	}
-
-	.arch-row-branch {
-		flex-direction: row;
-		justify-content: center;
-		gap: clamp(24px, 6vw, 96px);
-	}
-
-	.arch-branch {
-		flex-direction: row;
-		align-items: center;
+	.arch-flow {
+		display: block;
 	}
 }
 

@@ -80,9 +80,14 @@ export function Header() {
 						go('hero')
 					}}
 				>
-					<span className="brand-mark" aria-hidden="true">
-						LS<span>.</span>
-					</span>
+					<img
+						className="brand-mark"
+						src="/brand/lucas-steffen/icon-192.png"
+						alt=""
+						width={40}
+						height={40}
+						decoding="async"
+					/>
 					<span className="brand-copy">
 						<strong>Lucas Steffen</strong>
 						<small>{t.hero.role}</small>
