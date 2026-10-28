@@ -1,70 +1,125 @@
 import { GithubLogoIcon, ListIcon, XIcon } from '@phosphor-icons/react'
-import { useEffect, useState } from 'react'
-import { useLang } from '../context/LangProvider'
+import { useEffect, useRef, useState } from 'react'
+import { links } from '../content'
+import { useActiveSection } from '../hooks/useActiveSection'
+import { useLang } from '../i18n/LangProvider'
+import { scrollToSection } from '../lib/scroll'
+import { LanguageToggle } from './LanguageToggle'
 
-const LABELS = {
-    pt: { role: 'Engenheiro de Software Backend', home: 'Início', work: 'Atuação', experience: 'Experiência', skills: 'Stack', mainNav: 'Navegação principal', mobileNav: 'Navegação mobile', openMenu: 'Abrir menu', closeMenu: 'Fechar menu' },
-    en: { role: 'Backend Software Engineer', home: 'Home', work: 'Work', experience: 'Experience', skills: 'Stack', mainNav: 'Main navigation', mobileNav: 'Mobile navigation', openMenu: 'Open menu', closeMenu: 'Close menu' },
-}
-
-const SECTIONS = ['hero', 'work', 'experience', 'skills'] as const
-type SectionId = (typeof SECTIONS)[number]
-
-function scrollTo(section: SectionId) {
-    if (section === 'hero') return window.scrollTo({ top: 0, behavior: 'smooth' })
-    document.getElementById(section)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-}
-
-function useActiveSection() {
-    const [active, setActive] = useState<SectionId>('hero')
-
-    useEffect(() => {
-        const elements = SECTIONS.slice(1).map(id => document.getElementById(id)).filter(Boolean) as HTMLElement[]
-        const observer = new IntersectionObserver(entries => {
-            const visible = entries.filter(entry => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)
-            if (visible[0]) setActive(visible[0].target.id as SectionId)
-        }, { rootMargin: '-20% 0px -60% 0px', threshold: [0, .2, .5] })
-        elements.forEach(element => observer.observe(element))
-        const onScroll = () => { if (window.scrollY < 160) setActive('hero') }
-        window.addEventListener('scroll', onScroll, { passive: true })
-        return () => { observer.disconnect(); window.removeEventListener('scroll', onScroll) }
-    }, [])
-
-    return active
-}
+const NAV_IDS = ['cases', 'skills', 'experience', 'contact'] as const
+const OBSERVED = ['about', ...NAV_IDS] as const
 
 export function Header() {
-    const { lang } = useLang()
-    const labels = LABELS[lang]
-    const active = useActiveSection()
-    const [open, setOpen] = useState(false)
-    const nav = [
-        { id: 'work' as const, label: labels.work },
-        { id: 'experience' as const, label: labels.experience },
-        { id: 'skills' as const, label: labels.skills },
-    ]
+	const { t } = useLang()
+	const active = useActiveSection(OBSERVED)
+	const [open, setOpen] = useState(false)
+	const headerRef = useRef<HTMLElement>(null)
+	const toggleRef = useRef<HTMLButtonElement>(null)
 
-    const navigate = (id: SectionId) => { scrollTo(id); setOpen(false) }
+	const labels: Record<(typeof NAV_IDS)[number], string> = {
+		cases: t.nav.cases,
+		experience: t.nav.experience,
+		skills: t.nav.stack,
+		contact: t.nav.contact,
+	}
 
-    return <header className="site-header">
-        <div className="header-shell">
-            <button className="header-brand" onClick={() => navigate('hero')} aria-label={labels.home}>
-                <span className="brand-mark">LS<span>.</span></span>
-                <span className="brand-copy"><strong>Lucas Steffen</strong><small>{labels.role}</small></span>
-            </button>
+	const go = (id: string) => {
+		scrollToSection(id)
+		setOpen(false)
+	}
 
-            <nav className="header-nav" aria-label={labels.mainNav}>
-                {nav.map(item => <button key={item.id} className={active === item.id ? 'active' : ''} onClick={() => navigate(item.id)}>{item.label}</button>)}
-            </nav>
+	useEffect(() => {
+		if (!open) return
+		const onKey = (event: KeyboardEvent) => {
+			if (event.key === 'Escape') {
+				setOpen(false)
+				toggleRef.current?.focus()
+			}
+		}
+		const onPointer = (event: PointerEvent) => {
+			if (!headerRef.current?.contains(event.target as Node)) setOpen(false)
+		}
+		const media = window.matchMedia('(min-width: 880px)')
+		const onMedia = () => {
+			if (media.matches) setOpen(false)
+		}
+		document.addEventListener('keydown', onKey)
+		document.addEventListener('pointerdown', onPointer)
+		media.addEventListener('change', onMedia)
+		return () => {
+			document.removeEventListener('keydown', onKey)
+			document.removeEventListener('pointerdown', onPointer)
+			media.removeEventListener('change', onMedia)
+		}
+	}, [open])
 
-            <div className="header-actions">
-                <a className="header-github" href="https://github.com/Lucas-Steffen" target="_blank" rel="noreferrer" aria-label="GitHub"><GithubLogoIcon size={18} /></a>
-                <button className="menu-toggle" onClick={() => setOpen(value => !value)} aria-label={open ? labels.closeMenu : labels.openMenu} aria-expanded={open}>{open ? <XIcon size={20} /> : <ListIcon size={20} />}</button>
-            </div>
-        </div>
+	const renderLink = (id: (typeof NAV_IDS)[number]) => (
+		<a
+			key={id}
+			href={`#${id}`}
+			className={active === id ? 'active' : undefined}
+			aria-current={active === id ? 'location' : undefined}
+			onClick={event => {
+				event.preventDefault()
+				go(id)
+			}}
+		>
+			{labels[id]}
+		</a>
+	)
 
-        {open && <nav className="mobile-nav" aria-label={labels.mobileNav}>
-            {nav.map(item => <button key={item.id} className={active === item.id ? 'active' : ''} onClick={() => navigate(item.id)}><span>0{nav.indexOf(item) + 1}</span>{item.label}</button>)}
-        </nav>}
-    </header>
+	return (
+		<header className="site-header" ref={headerRef}>
+			<div className="container header-shell">
+				<a
+					className="header-brand"
+					href="#hero"
+					aria-label={t.nav.home}
+					onClick={event => {
+						event.preventDefault()
+						go('hero')
+					}}
+				>
+					<img
+						className="brand-mark"
+						src="/brand/lucas-steffen/icon-192.png"
+						alt=""
+						width={40}
+						height={40}
+						decoding="async"
+					/>
+					<span className="brand-copy">
+						<strong>Lucas Steffen</strong>
+						<small>{t.hero.role}</small>
+					</span>
+				</a>
+
+				<nav className="header-nav" aria-label={t.nav.main}>
+					{NAV_IDS.map(renderLink)}
+				</nav>
+
+				<div className="header-actions">
+					<a className="icon-btn" href={links.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+						<GithubLogoIcon size={20} aria-hidden="true" />
+					</a>
+					<LanguageToggle />
+					<button
+						ref={toggleRef}
+						type="button"
+						className="icon-btn menu-toggle"
+						onClick={() => setOpen(value => !value)}
+						aria-label={open ? t.nav.menuClose : t.nav.menuOpen}
+						aria-expanded={open}
+						aria-controls="mobile-nav"
+					>
+						{open ? <XIcon size={22} aria-hidden="true" /> : <ListIcon size={22} aria-hidden="true" />}
+					</button>
+				</div>
+			</div>
+
+			<nav id="mobile-nav" className="mobile-nav" aria-label={t.nav.main} hidden={!open}>
+				{NAV_IDS.map(renderLink)}
+			</nav>
+		</header>
+	)
 }
