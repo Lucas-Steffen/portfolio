@@ -6,13 +6,14 @@ interface SectionProps {
 	title: string
 	index: string
 	intro?: string
+	wide?: boolean
 	children: ReactNode
 }
 
-export function Section({ id, title, index, intro, children }: SectionProps) {
+export function Section({ id, title, index, intro, wide, children }: SectionProps) {
 	return (
 		<section id={id} className="section" aria-labelledby={`${id}-title`}>
-			<div className="container">
+			<div className={wide ? 'container container-wide' : 'container'}>
 				<Reveal>
 					<div className="section-heading">
 						<span className="section-index" aria-hidden="true">

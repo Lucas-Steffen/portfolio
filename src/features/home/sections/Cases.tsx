@@ -8,8 +8,8 @@ export function Cases() {
 	const { labels } = cases
 
 	return (
-		<Section id="cases" index="02" title={cases.title} intro={cases.intro}>
-			<div className="cards-grid">
+		<Section id="cases" index="02" title={cases.title} intro={cases.intro} wide>
+			<div className="cards-grid cases-grid">
 				{cases.items.map((item, index) => (
 					<Reveal key={item.title} delay={index * 60}>
 						<article className="card case-card">

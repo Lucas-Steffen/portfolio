@@ -96,6 +96,10 @@ main:focus {
 	margin-inline: auto;
 }
 
+.container-wide {
+	width: min(100% - 2 * var(--gutter), var(--container-wide));
+}
+
 /* Entrada animada: só esconde quando o JS marcou o <html> com js-reveal. */
 .reveal {
 	transition:

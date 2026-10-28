@@ -20,7 +20,7 @@ h1{font-size:96px;line-height:1;letter-spacing:-.03em;margin-bottom:28px}
 .photo img{width:100%;height:100%;object-fit:cover}
 </style></head><body>
 <div class="copy"><p class="eyebrow">Engenheiro de Software Backend</p><h1>Lucas Steffen</h1>
-<div class="chips"><span>NestJS</span><span>TypeORM</span><span>PostgreSQL</span><span>Redis</span><span>gRPC</span></div></div>
+<div class="chips"><span>NestJS</span><span>TypeORM</span><span>PostgreSQL</span><span>Redis</span><span>Java</span></div></div>
 <div class="photo"><img src="data:image/webp;base64,${photo}" /></div>
 </body></html>`
 

@@ -491,6 +491,36 @@
 	display: flex;
 }
 
+/* Casos: 3 colunas fixas em telas largas, texto menor e tags ancoradas no rodapé. */
+@media (min-width: 1100px) {
+	.cases-grid {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}
+
+.case-card {
+	display: flex;
+	flex-direction: column;
+}
+
+.case-card dl {
+	font-size: calc(var(--fs-body) * 0.9);
+	line-height: 1.5;
+}
+
+.case-card dd li {
+	padding-left: 16px;
+}
+
+.case-card dd ul {
+	gap: 4px;
+}
+
+.card.case-card dl + .tag-list {
+	margin-top: auto;
+	padding-top: 14px;
+}
+
 .card {
 	flex: 1;
 	padding: clamp(18px, 2.4vw, 28px);
@@ -718,10 +748,6 @@
 	stroke-width: 5px;
 }
 
-.arch-edge-grpc {
-	--c: var(--grpc);
-}
-
 .arch-edge-async {
 	--c: var(--async);
 }
@@ -732,10 +758,6 @@
 
 .arch-arrow path {
 	fill: var(--sync);
-}
-
-.arch-arrow-grpc path {
-	fill: var(--grpc);
 }
 
 .arch-arrow-async path {
@@ -756,10 +778,6 @@
 	border-radius: 10px;
 	background: var(--bg-panel);
 	font-size: var(--fs-small);
-}
-
-.arch-step-grpc {
-	border-left-color: var(--grpc);
 }
 
 .arch-step-async {
@@ -808,10 +826,6 @@
 	margin-right: 6px;
 	vertical-align: middle;
 	border-top: 2px solid var(--sync);
-}
-
-.swatch-grpc {
-	border-top-color: var(--grpc);
 }
 
 .swatch-async {

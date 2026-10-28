@@ -12,7 +12,7 @@ npm run preview      # http://localhost:4178 (usado pelos testes)
 npm run lint
 npm run test:e2e     # Playwright com o Chrome instalado (faz o build se o preview não estiver no ar)
 npm run screenshots  # capturas em vários viewports, na pasta screenshots/ (ignorada pelo git)
-npm run images       # regenera public/img a partir de public/lucas e public/lucas-hoodie.png
+npm run images       # regenera public/img a partir de public/lucas/sem-logo-sem-fundo
 npm run og           # regenera public/og-image.png (1200x630)
 ```
 
@@ -35,7 +35,7 @@ Todo o texto fica em `src/content/pt.ts` e `src/content/en.ts`. O tipo `Content`
 
 ## Imagens
 
-Os originais em `public/lucas/` e `public/lucas-hoodie.png` não são alterados. `npm run images` gera AVIF/WebP em `public/img/`. As fotos de "Como trabalho" e "Contato" recebem tratamento de privacidade: só a pessoa fica nítida, e o restante (quadro com anotações internas) é desfocado e escurecido. Revise o resultado se trocar as fotos.
+Os originais em `public/lucas/` não são alterados. `npm run images` gera AVIF/WebP em `public/img/` a partir dos PNGs transparentes de `public/lucas/sem-logo-sem-fundo/` (Sobre: OlhandoFoto, Contato: OlhandoHorizonte). O Hero usa `public/lucas-hoodie.png`..
 
 ## Compartilhamento
 

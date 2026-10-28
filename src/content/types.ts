@@ -1,6 +1,15 @@
 export type Lang = 'pt' | 'en'
 
-export type SkillGroupId = 'apis' | 'data' | 'async' | 'security' | 'ops' | 'quality' | 'also'
+export type SkillGroupId =
+	| 'apis'
+	| 'data'
+	| 'async'
+	| 'integrations'
+	| 'security'
+	| 'ops'
+	| 'cicd'
+	| 'quality'
+	| 'also'
 
 export interface SkillGroup {
 	id: SkillGroupId
@@ -71,7 +80,7 @@ export interface Content {
 		disclaimer: string
 		ariaLabel: string
 		legendTitle: string
-		legend: { sync: string; grpc: string; async: string }
+		legend: { sync: string; async: string }
 		nodes: {
 			client: string
 			api: string

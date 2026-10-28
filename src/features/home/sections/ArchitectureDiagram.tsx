@@ -1,13 +1,13 @@
 import { Reveal } from '../../../components/Reveal'
 import { useLang } from '../../../i18n/LangProvider'
 
-type Edge = 'sync' | 'grpc' | 'async'
+type Edge = 'sync' | 'async'
 
 const NODE_W = 190
 const NODE_H = 64
 
 // Mesma ordem de `diagram.flow`, para colorir cada passo da lista no mobile.
-const flowKinds: Edge[] = ['sync', 'grpc', 'sync', 'async', 'sync', 'async']
+const flowKinds: Edge[] = ['sync', 'sync', 'sync', 'async', 'sync', 'async']
 
 type NodeProps = { x: number; y: number; label: string; main?: boolean; mono?: boolean }
 
@@ -71,7 +71,7 @@ export function ArchitectureDiagram() {
 
 				<svg className="arch-svg" viewBox="0 0 1060 384" role="img" aria-label={d.ariaLabel}>
 					<defs>
-						{(['sync', 'grpc', 'async'] as const).map(kind => (
+						{(['sync', 'async'] as const).map(kind => (
 							<marker
 								key={kind}
 								id={`arch-arrow-${kind}`}
@@ -89,7 +89,7 @@ export function ArchitectureDiagram() {
 					</defs>
 
 					<EdgeLine kind="sync" d="M200,192 H266" label="REST" lx={233} ly={176} />
-					<EdgeLine kind="grpc" d="M365,160 V62 H526" label="gRPC" lx={446} ly={46} />
+					<EdgeLine kind="sync" d="M365,160 V62 H526" label="REST" lx={446} ly={46} />
 					<EdgeLine kind="sync" d="M460,192 H526" label="cache" lx={493} ly={176} />
 					<EdgeLine kind="async" d="M365,224 V322 H526" label="jobs" lx={446} ly={306} />
 					<EdgeLine kind="async" d="M720,322 H786" label="consume" lx={753} ly={306} />
@@ -118,9 +118,6 @@ export function ArchitectureDiagram() {
 					<ul className="arch-legend" aria-label={d.legendTitle}>
 						<li>
 							<span className="swatch swatch-sync" aria-hidden="true" /> {d.legend.sync}
-						</li>
-						<li>
-							<span className="swatch swatch-grpc" aria-hidden="true" /> {d.legend.grpc}
 						</li>
 						<li>
 							<span className="swatch swatch-async" aria-hidden="true" /> {d.legend.async}
