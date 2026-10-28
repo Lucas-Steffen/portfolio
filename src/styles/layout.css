@@ -206,6 +206,20 @@
 	margin-bottom: 16px;
 }
 
+/* ---------- Grade de fundo (fixa, acompanha o scroll) ---------- */
+body::before {
+	content: '';
+	position: fixed;
+	inset: 0;
+	z-index: -1;
+	background:
+		linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 48px 48px,
+		linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 48px 48px;
+	-webkit-mask-image: radial-gradient(ellipse at 50% 30%, #000 0%, transparent 85%);
+	mask-image: radial-gradient(ellipse at 50% 30%, #000 0%, transparent 85%);
+	pointer-events: none;
+}
+
 /* ---------- Hero ---------- */
 .hero {
 	min-height: min(100svh - var(--header-h), clamp(560px, 90svh, 1000px));
@@ -213,19 +227,7 @@
 	align-items: center;
 	padding-block: clamp(32px, 6vw, 80px);
 	scroll-margin-top: 0;
-	background:
-		linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 48px 48px,
-		linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 48px 48px;
-	background-color: var(--bg);
 	position: relative;
-}
-
-.hero::after {
-	content: '';
-	position: absolute;
-	inset: 0;
-	background: radial-gradient(ellipse at 30% 40%, transparent 0%, var(--bg) 85%);
-	pointer-events: none;
 }
 
 .hero-grid {
