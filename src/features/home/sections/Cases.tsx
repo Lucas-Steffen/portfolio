@@ -1,3 +1,5 @@
+import { ArrowUpRightIcon, GithubLogoIcon } from '@phosphor-icons/react'
+import { ExternalLink } from '../../../components/ExternalLink'
 import { Reveal } from '../../../components/Reveal'
 import { Section } from '../../../components/Section'
 import { useLang } from '../../../i18n/LangProvider'
@@ -57,6 +59,19 @@ export function Cases() {
 									</li>
 								))}
 							</ul>
+							{item.links && (
+								<ul className="case-links">
+									{item.links.map(link => (
+										<li key={link.url}>
+											<ExternalLink className="case-link" href={link.url}>
+												<GithubLogoIcon size={18} aria-hidden="true" />
+													{link.label}
+													<ArrowUpRightIcon className="case-link-arrow" size={14} aria-hidden="true" />
+											</ExternalLink>
+										</li>
+									))}
+								</ul>
+							)}
 						</article>
 					</Reveal>
 				))}

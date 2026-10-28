@@ -5,21 +5,10 @@ import { ArchitectureDiagram } from './ArchitectureDiagram'
 
 export function About() {
 	const { t } = useLang()
-	const { about, proof } = t
+	const { about } = t
 
 	return (
 		<>
-			<div className="container">
-				<ul className="proof-strip">
-					{proof.map(item => (
-						<li key={item.value}>
-							<strong>{item.value}</strong>
-							<span>{item.label}</span>
-						</li>
-					))}
-				</ul>
-			</div>
-
 			<Section id="about" index="04" title={about.title}>
 				<div className="about-grid">
 					<Reveal>

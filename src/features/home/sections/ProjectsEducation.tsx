@@ -1,5 +1,3 @@
-import { ArrowUpRightIcon } from '@phosphor-icons/react'
-import { ExternalLink } from '../../../components/ExternalLink'
 import { Reveal } from '../../../components/Reveal'
 import { Section } from '../../../components/Section'
 import { useLang } from '../../../i18n/LangProvider'
@@ -27,9 +25,6 @@ export function Projects() {
 									</li>
 								))}
 							</ul>
-							<ExternalLink className="text-link" href={item.url}>
-								{projects.visit} {item.title} <ArrowUpRightIcon size={16} aria-hidden="true" />
-							</ExternalLink>
 						</article>
 					</Reveal>
 				))}

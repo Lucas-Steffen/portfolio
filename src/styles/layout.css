@@ -433,35 +433,6 @@
 	}
 }
 
-/* ---------- Prova ---------- */
-.proof-strip {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
-	gap: 1px;
-	margin-top: -1px;
-	border: 1px solid var(--line);
-	border-radius: var(--radius);
-	overflow: hidden;
-	background: var(--line);
-}
-
-.proof-strip li {
-	display: flex;
-	flex-direction: column;
-	gap: 2px;
-	padding: 18px 20px;
-	background: var(--bg-raised);
-}
-
-.proof-strip strong {
-	font-size: var(--fs-h3);
-}
-
-.proof-strip span {
-	color: var(--text-muted);
-	font-size: var(--fs-small);
-}
-
 /* ---------- Como trabalho ---------- */
 .about-grid {
 	display: grid;
@@ -754,6 +725,11 @@
 	stroke: var(--accent);
 }
 
+.arch-rect-async {
+	stroke-dasharray: 6 5;
+	stroke: var(--async);
+}
+
 .arch-text {
 	fill: var(--text);
 	font-size: 17px;
@@ -926,8 +902,63 @@
 	font-weight: 700;
 	color: var(--accent);
 	overflow-wrap: anywhere;
-	text-decoration: underline;
-	text-underline-offset: 4px;
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	padding: 10px 16px;
+	border: 1px solid var(--line-strong);
+	border-radius: 12px;
+	background: var(--bg-raised);
+	transition: border-color 0.2s;
+}
+
+.mail-link:hover,
+.mail-link:focus-visible {
+	border-color: var(--accent);
+}
+
+.mail-arrow {
+	flex: none;
+	opacity: 0;
+	transform: translate(-4px, 4px);
+	transition: opacity 0.2s, transform 0.2s;
+}
+
+.mail-link:hover .mail-arrow,
+.mail-link:focus-visible .mail-arrow {
+	opacity: 1;
+	transform: none;
+}
+
+.case-links {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-top: 14px;
+}
+
+.case-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	min-height: 40px;
+	padding: 0 14px;
+	border: 1px solid var(--line-strong);
+	border-radius: 10px;
+	font-size: var(--fs-small);
+	font-weight: 600;
+	color: var(--text);
+	transition: border-color 0.2s, color 0.2s;
+}
+
+.case-link:hover,
+.case-link:focus-visible {
+	border-color: var(--accent);
+	color: var(--accent);
+}
+
+.case-link-arrow {
+	opacity: 0.6;
 }
 
 .contact-photo {

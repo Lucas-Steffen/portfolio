@@ -26,6 +26,7 @@ export interface CaseStudy {
 	decisions: string[]
 	tech: string[]
 	tradeoffs?: string
+	links?: { label: string; url: string }[]
 	result?: string
 }
 
@@ -66,7 +67,6 @@ export interface Content {
 		photoLabel: string
 		socialLabel: string
 	}
-	proof: { value: string; label: string }[]
 	about: {
 		title: string
 		lead: string
@@ -108,7 +108,6 @@ export interface Content {
 	}
 	projects: {
 		title: string
-		visit: string
 		items: {
 			title: string
 			status: string
@@ -116,7 +115,7 @@ export interface Content {
 			date: string
 			description: string
 			tags: string[]
-			url: string
+			url?: string
 		}[]
 	}
 	education: {
@@ -128,8 +127,6 @@ export interface Content {
 		lead: string
 		text: string
 		email: string
-		copy: string
-		copied: string
 		photoAlt: string
 		follow: string
 	}

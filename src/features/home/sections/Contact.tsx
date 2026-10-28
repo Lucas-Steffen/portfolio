@@ -1,5 +1,4 @@
-import { CheckIcon, CopyIcon, GithubLogoIcon, InstagramLogoIcon, LinkedinLogoIcon } from '@phosphor-icons/react'
-import { useEffect, useRef, useState } from 'react'
+import { ArrowUpRightIcon, EnvelopeSimpleIcon, GithubLogoIcon, InstagramLogoIcon, LinkedinLogoIcon } from '@phosphor-icons/react'
 import { ExternalLink } from '../../../components/ExternalLink'
 import { Reveal } from '../../../components/Reveal'
 import { Section } from '../../../components/Section'
@@ -9,22 +8,6 @@ import { useLang } from '../../../i18n/LangProvider'
 export function Contact() {
 	const { t } = useLang()
 	const { contact } = t
-	const [copied, setCopied] = useState(false)
-	const timer = useRef<number>(undefined)
-
-	useEffect(() => () => window.clearTimeout(timer.current), [])
-
-	const copy = async () => {
-		try {
-			await navigator.clipboard.writeText(links.email)
-			setCopied(true)
-			window.clearTimeout(timer.current)
-			timer.current = window.setTimeout(() => setCopied(false), 2000)
-		} catch {
-			// Sem permissão de clipboard: o e-mail continua visível e clicável.
-		}
-	}
-
 	return (
 		<Section id="contact" index="07" title={contact.title}>
 			<Reveal>
@@ -35,12 +18,10 @@ export function Contact() {
 
 						<div className="contact-mail">
 							<a className="mail-link" href={`mailto:${links.email}`}>
-								{links.email}
+								<EnvelopeSimpleIcon size={22} aria-hidden="true" />
+								<span>{links.email}</span>
+								<ArrowUpRightIcon className="mail-arrow" size={18} aria-hidden="true" />
 							</a>
-							<button type="button" className="btn btn-ghost" onClick={copy}>
-								{copied ? <CheckIcon size={18} aria-hidden="true" /> : <CopyIcon size={18} aria-hidden="true" />}
-								<span aria-live="polite">{copied ? contact.copied : contact.copy}</span>
-							</button>
 						</div>
 
 						<ul className="contact-links">
