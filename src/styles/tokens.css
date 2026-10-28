@@ -1,0 +1,43 @@
+:root {
+	color-scheme: dark;
+
+	--bg: #0c0f12;
+	--bg-raised: #12171c;
+	--bg-panel: #171e25;
+	--line: #26313b;
+	--line-strong: #36444f;
+	--text: #e8eef2;
+	--text-muted: #9fb0bc;
+	--accent: #38e3a2;
+	--accent-ink: #04140e;
+	--sync: #38e3a2;
+	--grpc: #4cc9f0;
+	--async: #ffb454;
+
+	--font-text: 'Manrope Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+	--font-mono: 'JetBrains Mono Variable', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+	--gutter: clamp(16px, 4vw, 40px);
+	--container: 1280px;
+	--header-h: 64px;
+	--radius: 14px;
+
+	--fs-body: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+	--fs-small: 0.875rem;
+	--fs-label: 0.75rem;
+	--fs-h1: clamp(2.5rem, 1.6rem + 4.6vw, 5.5rem);
+	--fs-h2: clamp(1.75rem, 1.4rem + 1.6vw, 2.75rem);
+	--fs-h3: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem);
+}
+
+@media (min-width: 1920px) {
+	:root {
+		--container: clamp(1280px, 62vw, 1600px);
+		--fs-body: clamp(1.125rem, 0.6vw + 0.7rem, 1.5rem);
+		--fs-small: clamp(0.875rem, 0.4vw + 0.55rem, 1.125rem);
+		--fs-h1: clamp(5.5rem, 4vw, 8rem);
+		--fs-h2: clamp(2.75rem, 2vw, 4rem);
+		--fs-h3: clamp(1.375rem, 1vw, 2rem);
+		--header-h: 76px;
+	}
+}
