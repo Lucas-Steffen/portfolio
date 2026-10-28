@@ -39,7 +39,7 @@ Os originais em `public/lucas/` não são alterados. `npm run images` gera AVIF/
 
 ## Compartilhamento
 
-A URL do site vem de `VITE_SITE_URL` (padrão `https://lucassteffen.dev`, em `.env`) e é usada em canonical e Open Graph. **O domínio ainda não está ativo**: registre-o ou ajuste a variável antes de divulgar, senão os previews do LinkedIn/Instagram apontarão para uma URL inexistente.
+A URL do site vem de `VITE_SITE_URL` (padrão `https://lucas-steffen.vercel.app`, em `.env`) e é usada em canonical e Open Graph. O site está em `lucas-steffen.vercel.app`. Ao registrar um domínio próprio, ajuste a variável (e a env var no Vercel) para que canonical e previews do LinkedIn/Instagram apontem para ele.
 
 ## Conteúdo a enriquecer
 
